@@ -1,0 +1,11 @@
+useDynLib(KernelKnn)
+importFrom(Rcpp, evalCpp)
+import(OpenImageR)
+
+export(KernelKnn)
+export(KernelKnnCV)
+export(knn.index.dist)
+importFrom(stats,model.matrix)
+importFrom(utils,combn)
+importFrom(utils,setTxtProgressBar)
+importFrom(utils,txtProgressBar)

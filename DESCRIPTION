@@ -1,0 +1,23 @@
+Package: KernelKnn
+Type: Package
+Title: Kernel k Nearest Neighbors
+Version: 1.0.1
+Date: 2016-07-09
+Author: Lampros Mouselimis <mouselimislampros@gmail.com>
+Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
+BugReports: https://github.com/mlampros/KernelKnn/issues
+URL: https://github.com/mlampros/KernelKnn
+Description: Extends the simple k-nearest neighbors algorithm by incorporating numerous kernel functions and a variety of distance metrics. The package takes advantage of 'RcppArmadillo' to speed up the calculation of distances between observations.
+License: MIT + file LICENSE
+LazyData: TRUE
+Depends: R(>= 2.10.0)
+Imports: Rcpp (>= 0.12.5), OpenImageR
+LinkingTo: Rcpp, RcppArmadillo
+Suggests:
+    testthat,
+    covr,
+    knitr,
+    rmarkdown,
+    irlba
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1

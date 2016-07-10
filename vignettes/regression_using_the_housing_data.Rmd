@@ -1,0 +1,267 @@
+---
+title: "Regression using the Housing data"
+author: "Lampros Mouselimis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Regression using the Housing data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The following examples illustrate the functionality of the KernelKnn package for **regression** tasks. I'll make use of the *Housing* data set, 
+
+```{r, eval=T}
+
+data(Boston, package = 'KernelKnn')
+
+str(Boston)
+
+```
+<br>
+
+
+When using an algorithm where the ouput depends on distance calculation (as is the case in k-nearest-neighbors) it is recommended to first scale the data,
+
+```{r, eval=T}
+X = scale(Boston[, -ncol(Boston)])
+y = Boston[, ncol(Boston)]
+
+# random split of data in train and test
+
+spl_train = sample(1:length(y), round(length(y) * 0.75))
+spl_test = setdiff(1:length(y), spl_train)
+str(spl_train)
+str(spl_test)
+
+
+# evaluation metric
+
+mse = function (y_true, y_pred) {
+  
+  out = mean((y_true - y_pred)^2)
+  
+  out
+}
+
+```
+
+
+
+## The KernelKnn function
+
+The KernelKnn function takes a number of arguments. To read details for each one of the arguments type ?KernelKnn::KernelKnn in the console. 
+
+A simple k-nearest-neighbors can be run with weights_function = NULL (the parameter 'regression' should be set to TRUE for regression),
+
+```{r, eval=T}
+
+library(KernelKnn)
+
+preds_TEST = KernelKnn(X[spl_train, ], TEST_data = X[spl_test, ], y[spl_train], k = 5 , 
+                       
+                       method = 'euclidean', weights_function = NULL, regression = T)
+str(preds_TEST)
+
+```
+
+<br>
+Using transf_categ_cols = TRUE, categorical features can be either encoded to dummy or to numeric features depending on the number of the unique values (here I convert the 'chas' and 'rad' features to factor to apply the *transf_categ_cols* parameter)
+
+```{r, eval=T}
+
+
+apply(Boston, 2, function(x) length(unique(x)))
+
+
+tmp_bst = Boston
+tmp_bst$chas = as.factor(tmp_bst$chas)
+tmp_bst$rad = as.factor(tmp_bst$rad)
+
+preds_TEST = KernelKnn(tmp_bst[spl_train, -ncol(tmp_bst)], 
+                       
+                       TEST_data = tmp_bst[spl_test, -ncol(tmp_bst)], 
+                       
+                       y[spl_train], k = 5 , method = 'euclidean', 
+                       
+                       regression = T, transf_categ_cols = T)
+str(preds_TEST)
+
+```
+<br>
+There are two ways to use a kernel in the KernelKnn function. The **first option** is to choose one of the existing kernels (*uniform*, *triangular*, *epanechnikov*, *biweight*, *triweight*, *tricube*, *gaussian*, *cosine*, *logistic*, *silverman*, *inverse*, *gaussianSimple*, *exponential*). Here, I use the *mahalanobis* metric (which takes advantage of the covariance matrix of the data, but it somewhat slows down training in comparison to the other distance metrics) and the *biweight* kernel, because they give optimal results (according to my *RandomSearchR* package),
+
+
+```{r, eval=T}
+
+
+preds_TEST_biw = KernelKnn(X[spl_train, ], TEST_data = X[spl_test, ], y[spl_train], k = 5, 
+                           
+                           method = 'mahalanobis', weights_function = 'biweight', 
+                           
+                           regression = T, transf_categ_cols = F)
+str(preds_TEST_biw)
+
+```
+<br>
+The **second option** is to give a self defined kernel function. Here, I'll pick the density function of the normal distribution with mean = 0.0 and standard deviation = 1.0 (the data are scaled to have mean zero and unit variance),
+
+
+```{r, eval=T}
+
+
+norm_kernel = function(W) {
+  
+  W = dnorm(W, mean = 0, sd = 1.0)
+  
+  W = W / rowSums(W)
+  
+  return(W)
+}
+
+
+preds_TEST_norm = KernelKnn(X[spl_train, ], TEST_data = X[spl_test, ], y[spl_train], k = 5,
+                            
+                            method = 'mahalanobis', weights_function = norm_kernel, 
+                            
+                            regression = T, transf_categ_cols = F)
+str(preds_TEST_norm)
+
+```
+<br>
+
+
+The computations can be speed up by using the parameter **threads** (multiple cores can be run in parallel). There is also the option to exclude **extrema** (minimum and maximum distances) during the calculation of the k-nearest-neighbor distances using extrema = TRUE. The *bandwidth* of the existing kernels can be tuned using the **h** parameter. 
+<br>
+
+K-nearest-neigbor calculations in the KernelKnn function can be accomplished using the following distance metrics : *euclidean*, *manhattan*, *chebyshev*, *canberra*, *braycurtis*, *minkowski* (by default the order 'p' of the minkowski parameter equals k), *hamming*, *mahalanobis*, *pearson_correlation*, *simple_matching_coefficient*, *jaccard_coefficient* and *Rao_coefficient*. The last four are similarity measures and are appropriate for binary data [0,1].
+<br>
+
+I employed my RandomSearchR package to find the optimal parameters for the KernelKnn function and the following two pairs of parameters give an optimal mean-squared-error,
+<br>
+<br>
+
+```{r, eval = T, echo = F}
+
+ knitr::kable(data.frame(k = c(9,3), method = c('mahalanobis', 'canberra'), kernel = c('triweight', 'cosine')))
+```
+
+
+
+## The KernelKnnCV function
+ 
+I'll use the *KernelKnnCV* function to calculate the mean-squared-error using 3-fold cross-validation for the previous mentioned parameter pairs,
+
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+
+fit_cv_pair1 = KernelKnnCV(X, y, k = 9, folds = 3, method = 'mahalanobis', 
+                           
+                           weights_function = 'triweight', regression = T, threads = 5)
+```
+
+```{r, eval=T}
+str(fit_cv_pair1)
+```
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+fit_cv_pair2 = KernelKnnCV(X, y, k = 3, folds = 3, method = 'canberra',
+                           
+                           weights_function = 'cosine', regression = T, threads = 5)
+```
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+str(fit_cv_pair2)
+
+```
+<br>
+
+
+Each cross-validated object returns a list of length 2 ( the first sublist includes the predictions for each fold whereas the second gives the indices of the folds)
+
+
+```{r, eval=T}
+mse_pair1 = unlist(lapply(1:length(fit_cv_pair1$preds), 
+                          
+                          function(x) mse(y[fit_cv_pair1$folds[[x]]], 
+                                          
+                                          fit_cv_pair1$preds[[x]])))
+mse_pair1
+
+cat('mse for params_pair1 is :', mean(mse_pair1), '\n')
+
+mse_pair2 = unlist(lapply(1:length(fit_cv_pair2$preds), 
+                          
+                          function(x) mse(y[fit_cv_pair2$folds[[x]]], 
+                                          
+                                          fit_cv_pair2$preds[[x]])))
+mse_pair2
+
+cat('mse for params_pair2 is :', mean(mse_pair2), '\n')
+
+```
+<br>
+
+
+## Adding or multiplying kernels
+
+In the KernelKnn package there is also the option to **combine kernels** (adding or multiplying) from the existing ones. For instance, if I want to multiply the *tricube* with the *gaussian* kernel, then I'll give the following character string to the weights_function, *"tricube_gaussian_MULT"*. On the other hand, If I want to add the same kernels then the weights_function will be *"tricube_gaussian_ADD"*. I experimented with my RandomSearchR package combining the different kernels and the following two parameter settings gave optimal results, 
+
+<br>
+```{r, eval = T, echo = F}
+
+ knitr::kable(data.frame(k = c(19,18), method = c('mahalanobis', 'mahalanobis'), kernel = c('triangular_triweight_MULT', 'biweight_triweight_gaussian_MULT')))
+```
+
+<br>
+
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+
+fit_cv_pair1 = KernelKnnCV(X, y, k = 19, folds = 3, method = 'mahalanobis', 
+                           
+                           weights_function = 'triangular_triweight_MULT', 
+                           
+                           regression = T, threads = 5)
+```
+
+```{r, eval=T}
+str(fit_cv_pair1)
+```
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+fit_cv_pair2 = KernelKnnCV(X, y, k = 18, folds = 3, method = 'mahalanobis', 
+                           
+                           weights_function = 'biweight_triweight_gaussian_MULT', 
+                           
+                           regression = T, threads = 5)
+```
+
+```{r, eval=T}
+str(fit_cv_pair2)
+
+```
+<br>
+
+```{r, eval=T}
+mse_pair1 = unlist(lapply(1:length(fit_cv_pair1$preds), 
+                          
+                          function(x) mse(y[fit_cv_pair1$folds[[x]]], 
+                                          
+                                          fit_cv_pair1$preds[[x]])))
+mse_pair1
+
+cat('mse for params_pair1 is :', mean(mse_pair1), '\n')
+
+mse_pair2 = unlist(lapply(1:length(fit_cv_pair2$preds), 
+                          
+                          function(x) mse(y[fit_cv_pair2$folds[[x]]], 
+                                          
+                                          fit_cv_pair2$preds[[x]])))
+mse_pair2
+
+cat('mse for params_pair2 is :', mean(mse_pair2), '\n')
+
+```
+<br>
+

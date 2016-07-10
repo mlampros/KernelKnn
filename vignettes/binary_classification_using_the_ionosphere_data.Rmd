@@ -1,0 +1,271 @@
+---
+title: "binary classification using the ionosphere data"
+author: "Lampros Mouselimis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{binary classification using the ionosphere data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+The following examples illustrate the functionality of the KernelKnn package for **classification** tasks. I'll make use of the *ionosphere* data set, 
+
+
+
+```{r, eval=T}
+
+data(ionosphere, package = 'KernelKnn')
+
+apply(ionosphere, 2, function(x) length(unique(x)))
+
+# the second column will be removed as it has a single unique value
+
+ionosphere = ionosphere[, -2]
+```
+<br>
+
+
+When using an algorithm where the ouput depends on distance calculation (as is the case in k-nearest-neighbors) it is recommended to first scale the data,
+
+
+```{r, eval=T}
+# recommended is to scale the data
+
+X = scale(ionosphere[, -ncol(ionosphere)])
+y = ionosphere[, ncol(ionosphere)]
+```
+<br>
+
+**important note** : In classification, both functions *KernelKnn* and *KernelKnnCV* accept a numeric vector as a response variable (here y) and the unique values of the labels should begin from 1. This is important otherwise the internal functions do not work. Furthermore, both functions (by default) return predictions in form of probabilities, which can be converted to labels by using either a threshold (if binary classification) or the maximum value of each column (if multiclass classification).
+
+
+```{r, eval=T}
+
+# labels should be numeric and begin from 1:Inf
+
+y = c(1:length(unique(y)))[ match(ionosphere$class, sort(unique(ionosphere$class))) ]
+
+# random split of data in train and test
+
+spl_train = sample(1:length(y), round(length(y) * 0.75))
+spl_test = setdiff(1:length(y), spl_train)
+str(spl_train)
+str(spl_test)
+
+
+# evaluation metric
+
+acc = function (y_true, preds) {
+  
+  out = table(y_true, max.col(preds, ties.method = "random"))
+  
+  acc = sum(diag(out))/sum(out)
+  
+  acc
+}
+
+```
+
+
+## The KernelKnn function
+
+The KernelKnn function takes a number of arguments. To read details for each one of the arguments type ?KernelKnn::KernelKnn in the console. 
+
+A simple k-nearest-neighbors can be run with weights_function = NULL and the parameter 'regression' should be set to FALSE. In classification the *Levels* parameter takes the unique values of the response variable,
+
+```{r, eval=T, warning = FALSE, message = FALSE}
+
+library(KernelKnn)
+
+preds_TEST = KernelKnn(X[spl_train, ], TEST_data = X[spl_test, ], y[spl_train], k = 5 , 
+                       
+                       method = 'euclidean', weights_function = NULL, regression = F,
+                       
+                       Levels = unique(y))
+head(preds_TEST)
+
+```
+<br>
+There are two ways to use a kernel in the KernelKnn function. The **first option** is to choose one of the existing kernels (*uniform*, *triangular*, *epanechnikov*, *biweight*, *triweight*, *tricube*, *gaussian*, *cosine*, *logistic*, *silverman*, *inverse*, *gaussianSimple*, *exponential*). Here, I use the *canberra* metric and the *tricube* kernel because they give optimal results (according to my RandomSearchR package),
+
+
+```{r, eval=T}
+
+
+preds_TEST_tric = KernelKnn(X[spl_train, ], TEST_data = X[spl_test, ], y[spl_train], k = 10 , 
+                            
+                            method = 'canberra', weights_function = 'tricube', regression = F,  
+                            
+                            Levels = unique(y))
+head(preds_TEST_tric)
+
+```
+
+<br>
+The **second option** is to give a self defined kernel function. Here, I'll pick the density function of the normal distribution with mean = 0.0 and standard deviation = 1.0 (the data are scaled to have mean zero and unit variance),
+
+
+```{r, eval=T}
+
+
+norm_kernel = function(W) {
+  
+  W = dnorm(W, mean = 0, sd = 1.0)
+  
+  W = W / rowSums(W)
+  
+  return(W)
+}
+
+
+preds_TEST_norm = KernelKnn(X[spl_train, ], TEST_data = X[spl_test, ], y[spl_train], k = 10 , 
+                            
+                            method = 'canberra', weights_function = norm_kernel, regression = F, 
+                            
+                            Levels = unique(y))
+head(preds_TEST_norm)
+
+```
+<br>
+
+The computations can be speed up by using the parameter **threads** (multiple cores can be run in parallel). There is also the option to exclude **extrema** (minimum and maximum distances) during the calculation of the k-nearest-neighbor distances using extrema = TRUE. The *bandwidth* of the existing kernels can be tuned using the **h** parameter. 
+<br>
+
+K-nearest-neigbor calculations in the KernelKnn function can be accomplished using the following distance metrics : *euclidean*, *manhattan*, *chebyshev*, *canberra*, *braycurtis*, *minkowski* (by default the order 'p' of the minkowski parameter equals k), *hamming*, *mahalanobis*, *pearson_correlation*, *simple_matching_coefficient*, *jaccard_coefficient* and *Rao_coefficient*. The last four are similarity measures and are appropriate for binary data [0,1].
+<br>
+
+I employed my RandomSearchR package to find the optimal parameters for the KernelKnn function and the following two pairs of parameters give an optimal accuracy,
+<br><br>
+
+```{r, eval = T, echo = F}
+
+ knitr::kable(data.frame(k = c(10,9), method = c('canberra', 'canberra'), kernel = c('tricube', 'epanechnikov')))
+```
+
+
+## The KernelKnnCV function
+ 
+I'll use the *KernelKnnCV* function to calculate the accuracy using 5-fold cross-validation for the previous mentioned parameter pairs,
+
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+
+fit_cv_pair1 = KernelKnnCV(X, y, k = 10 , folds = 5, method = 'canberra', 
+                           
+                           weights_function = 'tricube', regression = F, 
+                           
+                           Levels = unique(y), threads = 5)
+```
+
+```{r, eval=T}
+str(fit_cv_pair1)
+```
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+fit_cv_pair2 = KernelKnnCV(X, y, k = 9 , folds = 5,method = 'canberra',
+                           
+                           weights_function = 'epanechnikov', regression = F,
+                           
+                           Levels = unique(y), threads = 5)
+```
+
+
+```{r, eval=T}
+str(fit_cv_pair2)
+
+```
+<br>
+
+
+Each cross-validated object returns a list of length 2 ( the first sublist includes the predictions for each fold whereas the second gives the indices of the folds)
+
+
+```{r, eval=T}
+acc_pair1 = unlist(lapply(1:length(fit_cv_pair1$preds), 
+                          
+                          function(x) acc(y[fit_cv_pair1$folds[[x]]], 
+                                          
+                                          fit_cv_pair1$preds[[x]])))
+acc_pair1
+
+cat('accurcay for params_pair1 is :', mean(acc_pair1), '\n')
+
+acc_pair2 = unlist(lapply(1:length(fit_cv_pair2$preds), 
+                          
+                          function(x) acc(y[fit_cv_pair2$folds[[x]]], 
+                                          
+                                          fit_cv_pair2$preds[[x]])))
+acc_pair2
+
+cat('accuracy for params_pair2 is :', mean(acc_pair2), '\n')
+
+```
+<br>
+
+
+## Adding or multiplying kernels
+
+In the KernelKnn package there is also the option to **combine kernels** (adding or multiplying) from the existing ones. For instance, if I want to multiply the *tricube* with the *gaussian* kernel, then I'll give the following character string to the weights_function, *"tricube_gaussian_MULT"*. On the other hand, If I want to add the same kernels then the weights_function will be *"tricube_gaussian_ADD"*. I experimented with my RandomSearchR package combining the different kernels and the following two parameter settings gave optimal results, 
+
+<br>
+
+```{r, eval = T, echo = F}
+
+ knitr::kable(data.frame(k = c(16,5), method = c('canberra', 'canberra'), kernel = c('biweight_triweight_gaussian_MULT', 'triangular_triweight_MULT')))
+```
+
+<br>
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+
+fit_cv_pair1 = KernelKnnCV(X, y, k = 16, folds = 5, method = 'canberra', 
+                           
+                           weights_function = 'biweight_triweight_gaussian_MULT', 
+                           
+                           regression = F, Levels = unique(y), threads = 5)
+```
+
+```{r, eval=T}
+str(fit_cv_pair1)
+```
+
+```{r, eval=T, warning = FALSE, message = FALSE, results = 'hide'}
+
+fit_cv_pair2 = KernelKnnCV(X, y, k = 5, folds = 5, method = 'canberra', 
+                           
+                           weights_function = 'triangular_triweight_MULT', 
+                           
+                           regression = F, Levels = unique(y), threads = 5)
+
+```
+
+```{r, eval=T}
+str(fit_cv_pair2)
+
+```
+<br>
+
+```{r, eval=T}
+acc_pair1 = unlist(lapply(1:length(fit_cv_pair1$preds), 
+                          
+                          function(x) acc(y[fit_cv_pair1$folds[[x]]], 
+                                          
+                                          fit_cv_pair1$preds[[x]])))
+acc_pair1
+
+cat('accuracy for params_pair1 is :', mean(acc_pair1), '\n')
+
+acc_pair2 = unlist(lapply(1:length(fit_cv_pair2$preds), 
+                          
+                          function(x) acc(y[fit_cv_pair2$folds[[x]]],
+                                          
+                                          fit_cv_pair2$preds[[x]])))
+acc_pair2
+
+cat('accuracy for params_pair2 is :', mean(acc_pair2), '\n')
+
+```
+<br>
+
