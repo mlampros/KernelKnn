@@ -1,8 +1,7 @@
-
 ## KernelKnn
 <br>
 
-The KernelKnn package extends the simple k-nearest neighbors algorithm by incorporating numerous kernel functions and a variety of distance metrics. The package takes advantage of 'RcppArmadillo' to speed up the calculation of distances between observations. More details on the functionality of KernelKnn can be found in the package Vignettes. 
+The KernelKnn package extends the simple k-nearest neighbors algorithm by incorporating numerous kernel functions and a variety of distance metrics. The package takes advantage of 'RcppArmadillo' to speed up the calculation of distances between observations. More details on the functionality of KernelKnn can be found in the [blog-post](http://mlampros.github.io/2016/07/10/KernelKnn/) and in the package Vignettes. 
 <br><br>
 
 To install the package from CRAN use, 
