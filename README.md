@@ -1,10 +1,4 @@
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/KernelKnn)](http://cran.r-project.org/package=KernelKnn)
-[![Travis-CI Build Status](https://travis-ci.org/mlampros/KernelKnn.svg?branch=master)](https://travis-ci.org/mlampros/KernelKnn)
-[![codecov.io](https://codecov.io/github/mlampros/KernelKnn/coverage.svg?branch=master)](https://codecov.io/github/mlampros/KernelKnn?branch=master)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/mlampros/KernelKnn?branch=master&svg=true)](https://ci.appveyor.com/project/mlampros/KernelKnn/branch/master)
-[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/KernelKnn?color=blue)](http://www.r-pkg.org/pkg/KernelKnn)
-
 
 ## KernelKnn
 <br>
