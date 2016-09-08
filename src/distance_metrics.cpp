@@ -52,32 +52,32 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           tmp_idx = std::sqrt(arma::as_scalar(arma::accu(arma::square((MATRIX.row(j) - MATRIX.row(i))))));
         }
 
-        if (method == "manhattan") {
+        else if (method == "manhattan") {
 
           tmp_idx = arma::as_scalar(arma::accu(arma::abs((MATRIX.row(j) - MATRIX.row(i)))));
         }
 
-        if (method == "chebyshev") {
+        else if (method == "chebyshev") {
 
-          tmp_idx = arma::as_scalar(max(abs((MATRIX.row(j) - MATRIX.row(i)))));
+          tmp_idx = arma::as_scalar(max(arma::abs((MATRIX.row(j) - MATRIX.row(i)))));
         }
 
-        if (method == "canberra") {
+        else if (method == "canberra") {
 
           tmp_idx = arma::as_scalar(arma::accu(arma::abs((MATRIX.row(j) - MATRIX.row(i)) + eps)/(arma::abs(MATRIX.row(j)) + arma::abs(MATRIX.row(i)) + eps)));                 // added 1.0e-6 otherwise rstudio crashes
         }
 
-        if (method == "braycurtis") {
+        else if (method == "braycurtis") {
 
           tmp_idx = arma::as_scalar(arma::accu(arma::abs((MATRIX.row(j) - MATRIX.row(i))))/(arma::accu(arma::abs(MATRIX.row(j))) + arma::accu(arma::abs(MATRIX.row(i)))));
         }
 
-        if (method == "pearson_correlation") {
+        else if (method == "pearson_correlation") {
 
           tmp_idx = arma::as_scalar(1.0 - arma::cor(MATRIX.row(j), MATRIX.row(i)));
         }
 
-        if (method == "simple_matching_coefficient") {
+        else if (method == "simple_matching_coefficient") {
           
           double a = eps;
           double d = eps;
@@ -97,22 +97,22 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           tmp_idx = 1.0 - ((a + d) / MATRIX.row(j).n_elem);
         }
 
-        if (method == "minkowski") {                                                                                     // by default the order of the minkowski parameter equals k
+        else if (method == "minkowski") {                                                                                     // by default the order of the minkowski parameter equals k
 
           tmp_idx = std::pow(arma::as_scalar(arma::accu(arma::pow(arma::abs((MATRIX.row(j) - MATRIX.row(i))), k))), 1.0/k);
         }
 
-        if (method == "hamming") {                                                                                     // for binary data
+        else if (method == "hamming") {                                                                                     // for binary data
 
           tmp_idx = arma::as_scalar(accu(MATRIX.row(j) != MATRIX.row(i))/(MATRIX.row(j).n_elem * 1.0));
         }
 
-        if (method == "mahalanobis") {                                                                                     // first create covariance matrix from data
+        else if (method == "mahalanobis") {                                                                                     // first create covariance matrix from data
 
           tmp_idx = arma::as_scalar(std::sqrt(arma::as_scalar(((MATRIX.row(j) - MATRIX.row(i)) * cov_mat) * (MATRIX.row(j) - MATRIX.row(i)).t())));
         }
         
-        if (method == "jaccard_coefficient") {                                                                                     // for binary data
+        else if (method == "jaccard_coefficient") {                                                                                     // for binary data
           
           double a = eps;
           double b = eps;
@@ -137,7 +137,7 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           tmp_idx = 1.0 - (a / (a + b + c));
         }
         
-        if (method == "Rao_coefficient") {                                                                                     // for binary data
+        else if (method == "Rao_coefficient") {                                                                                     // for binary data
           
           double a = eps;
           
@@ -152,7 +152,12 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           tmp_idx = 1.0 - (a / MATRIX.row(j).n_elem);
         }
         
-        if( tmp_idx != tmp_idx ) {                                // handling of NAs, if NaN then distance 1.0 [  NaN will compare false to everything, including itself ], http://stackoverflow.com/questions/11569337/using-an-if-statement-to-switch-nan-values-in-an-array-to-0-0]
+        else {
+          
+          tmp_idx = 0;                                             // default = 0; create exceptions in R, so that tmp_idx is never 0;
+        }
+        
+        if ( tmp_idx != tmp_idx ) {                                // handling of NAs, if NaN then distance 1.0 [  NaN will compare false to everything, including itself ], http://stackoverflow.com/questions/11569337/using-an-if-statement-to-switch-nan-values-in-an-array-to-0-0]
           
           tmp_out(j) = 1.0;}
         
@@ -209,32 +214,32 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
 
           tmp_idx = std::sqrt(arma::as_scalar(arma::accu(arma::square((MATRIX.row(j) - TEST_DATA.row(i))))));}
 
-        if (method == "manhattan") {
+        else if (method == "manhattan") {
 
           tmp_idx = arma::as_scalar(arma::accu(arma::abs((MATRIX.row(j) - TEST_DATA.row(i)))));
         }
 
-        if (method == "chebyshev") {
+        else if (method == "chebyshev") {
 
           tmp_idx = arma::as_scalar(arma::max(arma::abs((MATRIX.row(j) - TEST_DATA.row(i)))));
         }
 
-        if (method == "canberra") {
+        else if (method == "canberra") {
 
           tmp_idx = arma::as_scalar(arma::accu(arma::abs((MATRIX.row(j) - TEST_DATA.row(i)) + eps)/(arma::abs(MATRIX.row(j)) + arma::abs(TEST_DATA.row(i)) + eps)));         // added 1.0e-6 otherwise rstudio crashes
         }
 
-        if (method == "braycurtis") {
+        else if (method == "braycurtis") {
 
           tmp_idx = arma::as_scalar(arma::accu(arma::abs((MATRIX.row(j) - TEST_DATA.row(i))))/(arma::accu(arma::abs(MATRIX.row(j))) + arma::accu(arma::abs(TEST_DATA.row(i)))));
         }
 
-        if (method == "pearson_correlation") {
+        else if (method == "pearson_correlation") {
 
           tmp_idx = arma::as_scalar(1.0 - arma::cor(MATRIX.row(j), TEST_DATA.row(i)));
         }
 
-        if (method == "simple_matching_coefficient") {                                                                                     // for binary data
+        else if (method == "simple_matching_coefficient") {                                                                                     // for binary data
           
           double a = eps;
           double d = eps;
@@ -254,22 +259,22 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           tmp_idx = 1.0 - ((a + d) / MATRIX.row(j).n_elem);
         }
 
-        if (method == "minkowski") {                                                                                     //  by default the order of the minkowski parameter equals k
+        else if (method == "minkowski") {                                                                                     //  by default the order of the minkowski parameter equals k
 
           tmp_idx = std::pow(arma::as_scalar(arma::accu(arma::pow(arma::abs((MATRIX.row(j) - TEST_DATA.row(i))), k))), 1.0/k);
         }
 
-        if (method == "hamming") {                                                                                     // for binary data
+        else if (method == "hamming") {                                                                                     // for binary data
 
           tmp_idx = arma::as_scalar(arma::accu(MATRIX.row(j) != TEST_DATA.row(i))/(MATRIX.row(j).n_elem * 1.0));
         }
 
-        if (method == "mahalanobis") {                                                                                     //  first create covariance matrix from data 
+        else if (method == "mahalanobis") {                                                                                     //  first create covariance matrix from data 
 
           tmp_idx = arma::as_scalar(std::sqrt(arma::as_scalar(((MATRIX.row(j) - TEST_DATA.row(i)) * cov_mat) * (MATRIX.row(j) - TEST_DATA.row(i)).t())));
         }
         
-        if (method == "jaccard_coefficient") {                                                                                     // for binary data
+        else if (method == "jaccard_coefficient") {                                                                                     // for binary data
           
           double a = eps;
           double b = eps;
@@ -294,7 +299,7 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           tmp_idx = 1.0 - (a / (a + b + c));
         }
         
-        if (method == "Rao_coefficient") {                                                                                     // for binary data
+        else if (method == "Rao_coefficient") {                                                                                     // for binary data
           
           double a = eps;
           
@@ -307,6 +312,11 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
           }
           
           tmp_idx = 1.0 - (a / MATRIX.row(j).n_elem);
+        }
+        
+        else {
+          
+          tmp_idx = 0;                                             // default = 0; create exceptions in R, so that tmp_idx is never 0;
         }
         
         if( tmp_idx != tmp_idx ) { 

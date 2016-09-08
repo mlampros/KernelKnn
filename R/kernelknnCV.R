@@ -64,7 +64,7 @@ KernelKnnCV = function(data, y, k = 5, folds = 5, h = 1.0, method = 'euclidean',
   
   cat('\n') ; cat('cross-validation starts ..', '\n')
   
-  pb <- txtProgressBar(min = 1, max = folds, style = 3); cat('\n')
+  pb <- txtProgressBar(min = 0, max = folds, style = 3); cat('\n')
   
   for (i in 1:folds) {
     

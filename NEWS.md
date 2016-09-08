@@ -1,3 +1,6 @@
+## OpenImageR 1.0.2
+
+I updated the Description file with a URL and a BugReports web-address.
 
 ## OpenImageR 1.0.1
 

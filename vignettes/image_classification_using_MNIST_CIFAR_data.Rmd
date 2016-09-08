@@ -139,7 +139,7 @@ In this chunk of code, besides KernelKnnCV I'll also use HOG. The histogram of o
 
 library(OpenImageR)
 
-hog = HOG_apply(X, cells = 6, orientations = 9, height = 28, width = 28, threads = 6)
+hog = HOG_apply(X, cells = 6, orientations = 9, rows = 28, columns = 28, threads = 6)
 
 ## 
 ## time to complete : 1.802997 secs
@@ -293,9 +293,9 @@ Next, I'll run the KernelKnnCV using the HOG-descriptors,
 
 ```{r, eval = F, cache = T}
 
-hog = HOG_apply(X, cells = 6, orientations = 9, height = 32,
+hog = HOG_apply(X, cells = 6, orientations = 9, rows = 32,
                 
-                width = 32, threads = 6)
+                columns = 32, threads = 6)
 
 ## 
 ## time to complete : 3.394621 secs
