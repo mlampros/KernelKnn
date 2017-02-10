@@ -1,8 +1,8 @@
 Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
-Version: 1.0.3
-Date: 2016-12-08
+Version: 1.0.4
+Date: 2017-02-10
 Author: Lampros Mouselimis <mouselimislampros@gmail.com>
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 BugReports: https://github.com/mlampros/KernelKnn/issues

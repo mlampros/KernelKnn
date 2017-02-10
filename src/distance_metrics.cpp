@@ -1,4 +1,4 @@
-
+#define ARMA_DONT_PRINT_ERRORS
 # include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::plugins(openmp)]]
@@ -182,6 +182,33 @@ class kernelKnn {
     }
     
     
+    // calculate the 'inverse' AND in case of exception the 'Moore-Penrose pseudo-inverse' of the covariance matrix FOR the 'mahalanobis' distance
+    // https://github.com/mlampros/KernelKnn/issues/1
+    //
+    
+    arma::mat INV_EXC(arma::mat cov_data) {
+      
+      arma::mat inv_tmp;
+      
+      try {
+        
+        inv_tmp = arma::inv(arma::cov(cov_data));
+      }
+      
+      catch(...) {
+        
+        Rcpp::warning("the input matrix seems singular. The Moore-Penrose pseudo-inverse of the covariance matrix will be calculated");
+      }
+      
+      if (inv_tmp.empty()) {
+        
+        inv_tmp = arma::pinv(arma::cov(cov_data));
+      }
+      
+      return inv_tmp;
+    }
+    
+    
     // train-data-input-only
     //
     
@@ -191,7 +218,7 @@ class kernelKnn {
       
       if (method == "mahalanobis") {
         
-        cov_mat = arma::inv(arma::cov(MATRIX));
+        cov_mat = INV_EXC(arma::cov(MATRIX));
       }
       
       int ITERS = MATRIX.n_rows;
@@ -228,7 +255,7 @@ class kernelKnn {
       
       if (method == "mahalanobis") {
         
-        cov_mat = arma::inv(arma::cov(arma::join_vert(MATRIX, TEST_DATA)));
+        cov_mat = INV_EXC(arma::cov(arma::join_vert(MATRIX, TEST_DATA)));
       }
       
       int ITERS_TEST = TEST_DATA.n_rows;

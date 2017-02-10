@@ -11,6 +11,7 @@ y1 = Boston[1:350, dim(Boston)[2]]
 
 # binary classification
 data(ionosphere, package = 'KernelKnn')
+singular_mat = ionosphere 
 ionosphere = ionosphere[, -2]                                                                             # remove second column which has a single unique value
 X_class = ionosphere[, -dim(ionosphere)[2]]
 xtr_class = X_class[1:200, ]
@@ -234,6 +235,16 @@ testthat::test_that("it returns error if the weights function is invalid for reg
 testthat::test_that("it returns error if the weights function is invalid for regression = T, TEST_data is NOT NULL", {
 
   testthat::expect_error(KernelKnn(xtr, TEST_data = xte, y1, k = 5 , h = 1.0, method = 'euclidean', weights_function = as.factor(1:10), regression = T, transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL))
+})
+
+
+testthat::test_that("it returns a warning if the input matrix seems singular in case of the 'mahalanobis' distance", {
+  
+  tmp_x = singular_mat[, -ncol(singular_mat)]
+  
+  tmp_y = as.numeric(singular_mat[, ncol(singular_mat)])
+
+  testthat::expect_warning(KernelKnn(tmp_x, TEST_data = NULL, tmp_y, k = 5 , h = 1.0, method = 'mahalanobis', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = unique(tmp_y)))
 })
 
 
