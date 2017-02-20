@@ -1,6 +1,5 @@
 useDynLib(KernelKnn)
 importFrom(Rcpp, evalCpp)
-import(OpenImageR)
 
 export(KernelKnn)
 export(KernelKnnCV)

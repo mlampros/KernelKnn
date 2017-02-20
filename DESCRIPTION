@@ -1,8 +1,8 @@
 Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
-Version: 1.0.4
-Date: 2017-02-10
+Version: 1.0.5
+Date: 2017-02-20
 Author: Lampros Mouselimis <mouselimislampros@gmail.com>
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 BugReports: https://github.com/mlampros/KernelKnn/issues
@@ -11,13 +11,12 @@ Description: Extends the simple k-nearest neighbors algorithm by incorporating n
 License: MIT + file LICENSE
 LazyData: TRUE
 Depends: R(>= 2.10.0)
-Imports: Rcpp (>= 0.12.5), OpenImageR
+Imports: Rcpp (>= 0.12.5)
 LinkingTo: Rcpp, RcppArmadillo
 Suggests:
     testthat,
     covr,
     knitr,
-    rmarkdown,
-    irlba
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

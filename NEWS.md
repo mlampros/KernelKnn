@@ -1,4 +1,9 @@
 
+## KernelKnn 1.0.5
+
+I removed *OpenImageR* and *irlba* as package dependencies
+
+
 ## KernelKnn 1.0.4
 
 I added a try-catch Rcpp function to make possible the calculation of singular covariance matrices as sugggested in https://github.com/mlampros/KernelKnn/issues/1
