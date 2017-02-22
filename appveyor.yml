@@ -22,9 +22,7 @@ build_script:
   - travis-tool.sh install_r RcppArmadillo
   - travis-tool.sh install_r covr
   - travis-tool.sh install_r htmltools
-  - travis-tool.sh install_r irlba
-  - travis-tool.sh install_r OpenImageR
-  - travis-tool.sh install_deps
+  #- travis-tool.sh install_deps
 
 test_script:
   - travis-tool.sh run_tests
