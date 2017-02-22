@@ -1,4 +1,4 @@
-useDynLib(KernelKnn)
+useDynLib(KernelKnn, .registration = TRUE)
 importFrom(Rcpp, evalCpp)
 
 export(KernelKnn)
