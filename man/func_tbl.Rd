@@ -10,4 +10,3 @@ func_tbl(DF, W, labels)
 this function returns a table of probabilities for each label
 }
 \keyword{internal}
-

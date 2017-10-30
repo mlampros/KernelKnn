@@ -10,4 +10,3 @@ func_categorical_preds(prepr_categ)
 OPTION to convert categorical features TO either numeric [ if levels more than 32] OR to dummy variables [ if levels less than 32 ]
 }
 \keyword{internal}
-

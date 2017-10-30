@@ -10,4 +10,3 @@ regr_folds(folds, RESP)
 this function creates both stratified and non-stratified folds in regression
 }
 \keyword{internal}
-

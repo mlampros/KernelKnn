@@ -10,4 +10,3 @@ FUN_kernels(kernel, W, h)
 performs kernel smoothing using a bandwidth. Besides using a kernel there is also the option to combine kernels
 }
 \keyword{internal}
-

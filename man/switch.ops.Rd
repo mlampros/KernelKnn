@@ -10,4 +10,3 @@ switch.ops(LST, MODE = "ADD")
 Arithmetic operations on lists
 }
 \keyword{internal}
-

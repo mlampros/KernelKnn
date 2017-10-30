@@ -1,20 +1,18 @@
 
-#' kernel-k-nearest-neighbors using cross-validation
+#' cross validated kernel-k-nearest-neighbors using a distance matrix
 #'
-#' This function performs kernel k nearest neighbors regression and classification using cross validation
 #'
-#' @param data a data frame or matrix
+#' @param DIST_mat a distance matrix (square matrix) having a diagonal filled with either zero's (\emph{0}) or NA's (\emph{missing values})
 #' @param y a numeric vector (in classification the labels must be numeric from 1:Inf)
 #' @param k an integer specifying the k-nearest-neighbors
 #' @param folds the number of cross validation folds (must be greater than 1)
 #' @param h the bandwidth (applicable if the weights_function is not NULL, defaults to 1.0)
-#' @param method a string specifying the method. Valid methods are 'euclidean', 'manhattan', 'chebyshev', 'canberra', 'braycurtis', 'pearson_correlation', 'simple_matching_coefficient', 'minkowski' (by default the order 'p' of the minkowski parameter equals k), 'hamming', 'mahalanobis', 'jaccard_coefficient', 'Rao_coefficient'
 #' @param weights_function there are various ways of specifying the kernel function. See the details section.
 #' @param regression a boolean (TRUE,FALSE) specifying if regression or classification should be performed
-#' @param transf_categ_cols a boolean (TRUE, FALSE) specifying if the categorical columns should be converted to numeric or to dummy variables
 #' @param threads the number of cores to be used in parallel (openmp will be employed)
 #' @param extrema if TRUE then the minimum and maximum values from the k-nearest-neighbors will be removed (can be thought as outlier removal)
 #' @param Levels a numeric vector. In case of classification the unique levels of the response variable are necessary
+#' @param minimize either TRUE or FALSE. If TRUE then lower values will be considered as relevant for the k-nearest search, otherwise higher values.
 #' @param seed_num a numeric value specifying the seed of the random number generator
 #' @return a list of length 2. The first sublist is a list of predictions (the length of the list equals the number of the folds). The second sublist is a list with the indices for each fold.
 #' @author Lampros Mouselimis
@@ -31,19 +29,23 @@
 #' 
 #' X = ionosphere[, -c(2, ncol(ionosphere))]
 #' y = as.numeric(ionosphere[, ncol(ionosphere)])
+#' 
+#' dist_obj = dist(X)
+#' 
+#' dist_mat = as.matrix(dist_obj)
 #'
-#' out = KernelKnnCV(X, y, k = 5, folds = 3, regression = FALSE, Levels = unique(y))
+#' out = distMat.KernelKnnCV(dist_mat, y, k = 5, folds = 3, Levels = unique(y))
 #' }
 
 
-KernelKnnCV = function(data, y, k = 5, folds = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL, seed_num = 1) {
+distMat.KernelKnnCV = function(DIST_mat, y, k = 5, folds = 5, h = 1.0, weights_function = NULL, regression = F, threads = 1, extrema = F, Levels = NULL, minimize = T, seed_num = 1) {
   
-  if (length(y) != nrow(data)) stop('the size of the data and y differ')
-  if (!is.logical(regression)) stop('the regression argument should be either TRUE or FALSE')
-  if (any(is.na(data)) || any(is.na(y))) stop('the data or the response variable includes missing values')
   if (is.null(y)) stop('the response variable should be numeric')
   if (is.integer(y)) y = as.numeric(y)
   if (!is.numeric(y)) stop('in both regression and classification the response variable should be numeric or integer and in classification it should start from 1')
+  if (length(y) != nrow(DIST_mat)) stop('the size of the distance matrix and y differ')
+  if (!is.logical(regression)) stop('the regression argument should be either TRUE or FALSE')
+  if (any(is.na(DIST_mat)) || any(is.na(y))) stop('the DIST_mat or the response variable includes missing values')
   if (!regression && any(unique(y) < 1)) stop('the response variable values should begin from 1')
   if (folds < 2) stop('the number of folds should be at least 2')
   
@@ -70,9 +72,9 @@ KernelKnnCV = function(data, y, k = 5, folds = 5, h = 1.0, method = 'euclidean',
   
   for (i in 1:folds) {
     
-    tmp_fit[[i]] = KernelKnn(data[unlist(n_folds[-i]), ], TEST_data = data[unlist(n_folds[i]), ], y[unlist(n_folds[-i])], k = k, h = h, method = method, 
-                        
-                        weights_function = weights_function, regression = regression, transf_categ_cols = transf_categ_cols, threads = threads, extrema = extrema, Levels = Levels)
+    tmp_fit[[i]] = distMat.KernelKnn(DIST_mat, TEST_indices = unlist(n_folds[i]), y, k = k, h = h, weights_function = weights_function, regression = regression, 
+                                     
+                                     threads = threads, extrema = extrema, Levels = Levels, minimize = minimize)
     
     setTxtProgressBar(pb, i)
   }

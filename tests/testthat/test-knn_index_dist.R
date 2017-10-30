@@ -1,21 +1,5 @@
 #==============================================================================================================================================================
 
-# data sets
-
-# regression
-data(Boston)
-X = Boston[, -dim(Boston)[2]]
-xtr = X[1:350, ]
-xte = X[351:nrow(X), ]
-
-
-lappend <- function (lst, ...){            # lappend() function to append vector to list
-  
-  lst <- c(lst, list(...))
-  
-  return(lst)
-}
-
 context("Knn index distance")
 
 #=================

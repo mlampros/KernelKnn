@@ -10,4 +10,3 @@ FUNCTION_weights(W_dist_matrix, weights_function, eps = 1e-06)
 this function is used as a kernel-function-identifier [ takes the distances and a weights-kernel (in form of a function) and returns weights ]
 }
 \keyword{internal}
-

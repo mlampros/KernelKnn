@@ -10,4 +10,3 @@ func_shuffle(vec, times = 10)
 this function shuffles the items of a vector
 }
 \keyword{internal}
-

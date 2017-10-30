@@ -10,4 +10,3 @@ func_tbl_dist(DF, Levels)
 this function returns the probabilities in case of classification
 }
 \keyword{internal}
-

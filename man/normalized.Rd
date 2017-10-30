@@ -10,4 +10,3 @@ normalized(x)
 this function normalizes the data
 }
 \keyword{internal}
-

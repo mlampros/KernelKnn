@@ -1,4 +1,16 @@
 
+## KernelKnn 1.0.6
+
+In this version the following functions/parameters were added:
+
+* *seed_num* : parameter in *KernelKnnCV* and *distMat.KernelKnnCV* cross-validation functions, which specifies the seed of R's random number generator 
+* *distMat.KernelKnn* : this function performs kernel k-nearest-neighbor search by using a *distance matrix* as input
+* *distMat.knn.index.dist* : this function returns the indices and distances for k-nearest neighbors using a distance matrix
+* *distMat.KernelKnnCV* : this function performs cross-validated kernel k-nearest-neighbor search using a distance matrix as input
+
+I also modified the *OpenMP* clauses of the .cpp file to address the ASAN errors.
+
+
 ## KernelKnn 1.0.5
 
 I removed *OpenImageR* and *irlba* as package dependencies. I also added an *init.c* file in the *src* folder due to a change in CRAN submissions for compiled code [  *references* : http://stackoverflow.com/questions/42313373/r-cmd-check-note-found-no-calls-to-r-registerroutines-r-usedynamicsymbols, https://github.com/RcppCore/Rcpp/issues/636  ]

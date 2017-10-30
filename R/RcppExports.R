@@ -2,6 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 knn_index_dist_rcpp <- function(MATRIX, TEST_DATA, k, method, threads, eps = 1.0e-6) {
-    .Call('KernelKnn_knn_index_dist_rcpp', PACKAGE = 'KernelKnn', MATRIX, TEST_DATA, k, method, threads, eps)
+    .Call(`_KernelKnn_knn_index_dist_rcpp`, MATRIX, TEST_DATA, k, method, threads, eps)
+}
+
+DIST_MATRIX_knn <- function(DIST_MAT, TEST_IDX = NULL, is_min = TRUE, k = 5L, threads = 1L, rcpp_list_names = FALSE) {
+    .Call(`_KernelKnn_DIST_MATRIX_knn`, DIST_MAT, TEST_IDX, is_min, k, threads, rcpp_list_names)
 }
 

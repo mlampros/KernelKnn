@@ -1,18 +1,4 @@
 
-# data sets
-
-# regression
-data(Boston, package = 'KernelKnn')
-X = Boston[, -dim(Boston)[2]]
-y = Boston[, dim(Boston)[2]]
-
-# binary classification
-data(ionosphere, package = 'KernelKnn')
-ionosphere = ionosphere[, -2]                                                                             # remove second column which has a single unique value
-X_class = ionosphere[, -dim(ionosphere)[2]]
-y1_class = ionosphere[, dim(ionosphere)[2]]
-
-
 context("Cross validate kernelknn")
 
 
@@ -109,19 +95,19 @@ testthat::test_that("it returns an error if the length of y is not equal to the 
 
 testthat::test_that("it returns an error if regression = F and there are unique labels less than 1", {
   
-  testthat::expect_error( KernelKnnCV(X_class, as.numeric(y1_class) - 1, k = 5, folds = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F) )
+  testthat::expect_error( KernelKnnCV(X_class, as.numeric(y1_class_ext) - 1, k = 5, folds = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F) )
 })
 
 
 testthat::test_that("it returns an error if folds < 2", {
   
-  testthat::expect_error( KernelKnnCV(X_class, as.numeric(y1_class), k = 5, folds = 1, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, Levels = unique(y1_class)) )
+  testthat::expect_error( KernelKnnCV(X_class, as.numeric(y1_class_ext), k = 5, folds = 1, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, Levels = unique(y1_class_ext)) )
 })
 
 
 testthat::test_that("it returns an error if regression is not TRUE or FALSE", {
   
-  testthat::expect_error( KernelKnnCV(X_class, as.numeric(y1_class), k = 5, folds = 3, h = 1.0, method = 'euclidean', weights_function = NULL, regression = 'F', Levels = unique(y1_class)) )
+  testthat::expect_error( KernelKnnCV(X_class, as.numeric(y1_class_ext), k = 5, folds = 3, h = 1.0, method = 'euclidean', weights_function = NULL, regression = 'F', Levels = unique(y1_class_ext)) )
 })
 
 
@@ -147,7 +133,7 @@ testthat::test_that("it returns a list of length 2 where the length of the unlis
 
 testthat::test_that("it returns a list of length 2 where the length of the unlisted sublists equal the length of the train data, if REGRESSION = FALSE", {
   
-  res =  KernelKnnCV(X_class, as.numeric(y1_class), k = 5, folds = 3, method = 'euclidean', weights_function = NULL, regression = F, Levels = unique(y1_class))
+  res =  KernelKnnCV(X_class, as.numeric(y1_class_ext), k = 5, folds = 3, method = 'euclidean', weights_function = NULL, regression = F, Levels = unique(y1_class_ext))
   
   lap_pr = sum(unlist(lapply(res$preds, nrow)))
   

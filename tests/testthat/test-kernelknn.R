@@ -1,32 +1,5 @@
 #==============================================================================================================================================================
 
-# data sets
-
-# regression
-data(Boston, package = 'KernelKnn')
-X = Boston[, -dim(Boston)[2]]
-xtr = X[1:350, ]
-xte = X[351:nrow(X), ]
-y1 = Boston[1:350, dim(Boston)[2]]
-
-# binary classification
-data(ionosphere, package = 'KernelKnn')
-singular_mat = ionosphere 
-ionosphere = ionosphere[, -2]                                                                             # remove second column which has a single unique value
-X_class = ionosphere[, -dim(ionosphere)[2]]
-xtr_class = X_class[1:200, ]
-xte_class = X_class[201:nrow(X_class), ]
-y1_class = ionosphere[1:200, dim(ionosphere)[2]]
-
-
-lappend <- function(lst, ...){            # lappend() function to append vector to list
-
-  lst <- c(lst, list(...))
-
-  return(lst)
-}
-
-
 context("Kernel knn")
 
 

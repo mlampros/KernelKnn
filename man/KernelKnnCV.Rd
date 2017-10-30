@@ -6,7 +6,7 @@
 \usage{
 KernelKnnCV(data, y, k = 5, folds = 5, h = 1, method = "euclidean",
   weights_function = NULL, regression = F, transf_categ_cols = F,
-  threads = 1, extrema = F, Levels = NULL)
+  threads = 1, extrema = F, Levels = NULL, seed_num = 1)
 }
 \arguments{
 \item{data}{a data frame or matrix}
@@ -32,6 +32,8 @@ KernelKnnCV(data, y, k = 5, folds = 5, h = 1, method = "euclidean",
 \item{extrema}{if TRUE then the minimum and maximum values from the k-nearest-neighbors will be removed (can be thought as outlier removal)}
 
 \item{Levels}{a numeric vector. In case of classification the unique levels of the response variable are necessary}
+
+\item{seed_num}{a numeric value specifying the seed of the random number generator}
 }
 \value{
 a list of length 2. The first sublist is a list of predictions (the length of the list equals the number of the folds). The second sublist is a list with the indices for each fold.
@@ -45,15 +47,15 @@ There are three possible ways to specify the weights function, 1st option : if t
 }
 \examples{
 
+\dontrun{
 data(ionosphere)
 
 X = ionosphere[, -c(2, ncol(ionosphere))]
 y = as.numeric(ionosphere[, ncol(ionosphere)])
 
 out = KernelKnnCV(X, y, k = 5, folds = 3, regression = FALSE, Levels = unique(y))
-
+}
 }
 \author{
 Lampros Mouselimis
 }
-

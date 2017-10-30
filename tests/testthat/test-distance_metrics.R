@@ -1,19 +1,5 @@
 #==============================================================================================================================================================
 
-# REGRESSION
-
-data(Boston)
-X = Boston[, -dim(Boston)[2]]
-xtr = X[1:350, ]
-xte = X[351:nrow(X), ]
-
-# CLASSIFICATION
-data(ionosphere)
-ionosphere = ionosphere[, -c(2, ncol(ionosphere))]                    # remove second column which has a single unique value
-xtr_class = ionosphere[1:200, ]
-xte_class = ionosphere[201:nrow(ionosphere), ]
-
-
 context('Distance metrics rcpp')
 
 # TRAIN data

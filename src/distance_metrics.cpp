@@ -40,23 +40,18 @@ class kernelKnn {
     kernelKnn() { }
     
     
-    // inner loop
+    // inner loop [ no difference between threaded and non-threaded version for the 'inner_loop' method (parallelization) ]
     //
     
-    arma::rowvec inner_loop(arma::mat& MATRIX_1st, arma::mat& MATRIX_2nd, int i, int ITERS, int k, std::string method, int threads, arma::mat cov_mat, double eps = 1.0e-6) {
+    arma::rowvec inner_loop(arma::mat& MATRIX_1st, arma::mat& MATRIX_2nd, int i, int ITERS, int k, std::string& method, arma::mat& cov_mat, double eps = 1.0e-6) {
       
-      #ifdef _OPENMP
-      omp_set_num_threads(threads);
-      #endif
-      
-      double tmp_idx;
       
       arma::rowvec tmp_out = arma::zeros<arma::rowvec>(ITERS);
       
-      #ifdef _OPENMP
-      #pragma omp parallel for schedule(static)
-      #endif
-      for (int j = 0; j < ITERS; j++) {                                                                       // http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html
+      
+      for (int j = 0; j < ITERS; j++) {                                                                                                                                                        // http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html
+        
+        double tmp_idx;
         
         if (method == "euclidean") {
           
@@ -108,22 +103,22 @@ class kernelKnn {
           tmp_idx = 1.0 - ((a + d) / MATRIX_1st.row(j).n_elem);
         }
         
-        else if (method == "minkowski") {                                                                                     // by default the order of the minkowski parameter equals k
+        else if (method == "minkowski") {                                                                                                       // by default the order of the minkowski parameter equals k
           
           tmp_idx = std::pow(arma::as_scalar(arma::accu(arma::pow(arma::abs((MATRIX_1st.row(j) - MATRIX_2nd.row(i))), k))), 1.0/k);
         }
         
-        else if (method == "hamming") {                                                                                     // for binary data
+        else if (method == "hamming") {                                                                                                          // for binary data
           
           tmp_idx = arma::as_scalar(accu(MATRIX_1st.row(j) != MATRIX_2nd.row(i))/(MATRIX_1st.row(j).n_elem * 1.0));
         }
         
-        else if (method == "mahalanobis") {                                                                                     // first create covariance matrix from data
+        else if (method == "mahalanobis") {                                                                                                       // first create covariance matrix from data
           
           tmp_idx = arma::as_scalar(std::sqrt(arma::as_scalar(((MATRIX_1st.row(j) - MATRIX_2nd.row(i)) * cov_mat) * (MATRIX_1st.row(j) - MATRIX_2nd.row(i)).t())));
         }
         
-        else if (method == "jaccard_coefficient") {                                                                                     // for binary data
+        else if (method == "jaccard_coefficient") {                                                                                                // for binary data
           
           double a = eps;
           double b = eps;
@@ -170,7 +165,8 @@ class kernelKnn {
         
         if ( tmp_idx != tmp_idx ) {                                // handling of NAs, if NaN then distance 1.0 [  NaN will compare false to everything, including itself ], http://stackoverflow.com/questions/11569337/using-an-if-statement-to-switch-nan-values-in-an-array-to-0-0]
           
-          tmp_out(j) = 1.0;}
+          tmp_out(j) = 1.0;
+        }
         
         else {
           
@@ -209,80 +205,224 @@ class kernelKnn {
     }
     
     
+    // secondary function for the 'train_only' and 'test_only' methods [ due to ASAN errors ]
+    //
+    
+    arma::field<arma::rowvec> inner_field_func(arma::mat& MATRIX, arma::mat& MATRIX1, int i, int ITERS, int k, std::string& method, arma::mat& cov_mat, double eps = 1.0e-6) {
+      
+      arma::rowvec tmp_out = inner_loop(MATRIX, MATRIX1, i, ITERS, k, method, cov_mat, eps);
+      
+      arma::uvec index_out = arma::sort_index(tmp_out, "ascend");
+      
+      arma::field<arma::rowvec> F(2,1);
+      
+      F(0,0) = tmp_out;
+      
+      F(1,0) = arma::conv_to< arma::rowvec >::from(index_out);
+      
+      return F;
+    }
+    
+    
     // train-data-input-only
     //
     
-    void train_only(arma::mat& MATRIX, int k, std::string method, int threads, double eps = 1.0e-6) {
+    void train_only(arma::mat& MATRIX, int k, std::string& method, int threads, double eps = 1.0e-6) {
       
-      arma::mat cov_mat;
+      #ifdef _OPENMP
+      omp_set_num_threads(threads);
+      #endif
+      
+      unsigned int COLS = MATRIX.n_cols;
+      
+      arma::mat cov_mat(COLS, COLS);
       
       if (method == "mahalanobis") {
         
-        cov_mat = INV_EXC(arma::cov(MATRIX));
+        cov_mat = INV_EXC(MATRIX);
       }
       
       int ITERS = MATRIX.n_rows;
-      
-      knn_indices.set_size(ITERS, k);                                                           // loop to calculate the distances for the TRAIN data [MATRIX]
+
+      knn_indices.set_size(ITERS, k);                                                                   // loop to calculate the distances for the TRAIN data [ MATRIX ]
       
       knn_distances.set_size(ITERS, k);
+
+      int i,f;
       
       #ifdef _OPENMP
-      #pragma omp parallel for schedule(static)
+      #pragma omp parallel for schedule(static) shared(ITERS, eps, cov_mat, method, k, MATRIX) private(i, f)
       #endif
-      for (int i = 0; i < ITERS; i++) {
+      for (i = 0; i < ITERS; i++) {
         
-        arma::rowvec tmp_out = inner_loop(MATRIX, MATRIX, i, ITERS, k, method, threads, cov_mat, eps);
-        
-        arma::rowvec index_out = arma::conv_to< arma::rowvec >::from(arma::sort_index(tmp_out, "ascend")) + 1;
-        
-        knn_indices.row(i) = index_out.subvec(1,k);
-        
-        arma::rowvec tmp_sort = arma::conv_to< arma::rowvec >::from(arma::sort(tmp_out, "ascend"));
-        
-        knn_distances.row(i) = tmp_sort.subvec(1,k);
+        arma::field<arma::rowvec> unl_field = inner_field_func(MATRIX, MATRIX, i, ITERS, k, method, cov_mat, eps);
+
+        for (f = 1; f < k + 1; f++) {
+          
+          int IDX_subset_iter = unl_field(1,0)(f);
+          
+          #ifdef _OPENMP
+          #pragma omp atomic write
+          #endif
+          knn_indices(i,f-1) = IDX_subset_iter + 1;                                                     // 'knn_indices', 'knn_distances' : class-members (not variables) are 'shared' by default when they aren't present in the clauses [ see comment https://stackoverflow.com/questions/5891641/data-members-in-an-openmp-loop ]
+          
+          #ifdef _OPENMP
+          #pragma omp atomic write
+          #endif
+          knn_distances(i,f-1) = unl_field(0,0)(IDX_subset_iter);
+        }
       }
     }
-    
     
     
     // test-data-only
     //
     
-    void test_only(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string method, int threads, double eps = 1.0e-6) {
+    void test_only(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string& method, int threads, double eps = 1.0e-6) {
       
-      arma::mat cov_mat;
+      #ifdef _OPENMP
+      omp_set_num_threads(threads);
+      #endif
       
-      if (method == "mahalanobis") {
+      unsigned int COLS = MATRIX.n_cols;
+      
+      arma::mat cov_mat(COLS, COLS);
+      
+      if (method == "mahalanobis") { 
         
-        cov_mat = INV_EXC(arma::cov(arma::join_vert(MATRIX, TEST_DATA)));
+        cov_mat = INV_EXC(arma::join_vert(MATRIX, TEST_DATA));
       }
       
       int ITERS_TEST = TEST_DATA.n_rows;
       
       int ITERS_TRAIN = MATRIX.n_rows;
-      
+
       knn_indices.set_size(ITERS_TEST, k);
       
       knn_distances.set_size(ITERS_TEST, k);
       
+      int i,f;
+      
       #ifdef _OPENMP
-      #pragma omp parallel for schedule(static)
+      #pragma omp parallel for schedule(static) shared(ITERS_TEST, eps, cov_mat, threads, method, k, ITERS_TRAIN, TEST_DATA, MATRIX) private(i, f)
       #endif
-      for (int i = 0; i < ITERS_TEST; i++) {
+      for (i = 0; i < ITERS_TEST; i++) {
         
-        arma::rowvec tmp_out = inner_loop(MATRIX, TEST_DATA, i, ITERS_TRAIN, k, method, threads, cov_mat, eps);
+        arma::field<arma::rowvec> unl_field = inner_field_func(MATRIX, TEST_DATA, i, ITERS_TRAIN, k, method, cov_mat, eps);
         
-        arma::rowvec index_out = arma::conv_to< arma::rowvec >::from(arma::sort_index(tmp_out, "ascend")) + 1;
-        
-        knn_indices.row(i) = index_out.subvec(0,k-1);
-        
-        arma::rowvec tmp_sort = arma::conv_to< arma::rowvec >::from(arma::sort(tmp_out, "ascend"));
-        
-        knn_distances.row(i) = tmp_sort.subvec(0,k-1);
+        for (f = 0; f < k; f++) {
+          
+          int IDX_subset_iter = unl_field(1,0)(f);
+
+          #ifdef _OPENMP
+          #pragma omp atomic write
+          #endif
+          knn_indices(i,f) = IDX_subset_iter + 1;
+          
+          #ifdef _OPENMP
+          #pragma omp atomic write
+          #endif
+          knn_distances(i,f) = unl_field(0,0)(IDX_subset_iter);
+        }
       }
     }
     
+    
+    // secondary function for the 'input_dist_mat' [ due to ASAN errors ]
+    //
+    
+    arma::field<arma::rowvec> inner_dist_field(arma::mat& DIST_MAT, bool idx_openmp_flag, arma::uvec& test_idx, double min_sort, unsigned int i, const char *asc_des) {
+
+      arma::rowvec tmp_row = DIST_MAT.row(i);                                                             // take each row IF test-indices NOT Null AND IF minimize = true THEN fill the test-indices with A MAXIMUM VALUE (so that sort_index does not pick one of the test-indices) IF minimize = false THEN fill the test-indices with a MINIMUM VALUE
+      
+      if (idx_openmp_flag) {
+        
+        tmp_row(test_idx).fill(min_sort);                                                                  // another option would be to use erase for the 'test_idx' (remove the 'test_idx' from 'tmp_row') so that the for-loop can run faster, however I won't be able to calculate the sorted indices correctly (especially in case of cross-validation)
+      }
+      
+      arma::uvec index_out = arma::sort_index(tmp_row, asc_des);
+
+      arma::field<arma::rowvec> F(2,1);
+
+      F(0,0) = tmp_row;
+      
+      F(1,0) = arma::conv_to< arma::rowvec >::from(index_out);
+
+      return F;
+    }
+    
+    
+    // input data is a distance matrix
+    //
+    
+    void input_dist_mat(arma::mat& DIST_MAT, Rcpp::Nullable<Rcpp::NumericVector> TEST_IDX = R_NilValue, bool is_min = true, int k = 5, int threads = 1) {
+      
+      #ifdef _OPENMP
+      omp_set_num_threads(threads);
+      #endif
+      
+      arma::uvec test_idx;
+      
+      bool idx_openmp_flag = false;
+      
+      if (TEST_IDX.isNotNull()) {
+        
+        idx_openmp_flag = true;
+        
+        test_idx = Rcpp::as<arma::uvec>(TEST_IDX);
+        
+        test_idx = test_idx - 1;                                               // adjust the indices to c++ indexing (which begins from 0)
+        
+        DIST_MAT = DIST_MAT.rows(test_idx);                                    // overwrite the DIST_MAT using the test-indices (in case that TEST_IDX not NULL)
+      }
+      
+      unsigned int ROWS = DIST_MAT.n_rows;
+      
+      const char *asc_des = is_min ? "ascend" : "descend";
+      
+      double min_sort = arma::datum::inf;;
+      
+      if (idx_openmp_flag) {
+        
+        min_sort = is_min ? arma::datum::inf : (-arma::datum::inf);             // in case of minimization of distance (and TEST_IDX not NULL) assign the max. value to train-data (and the opposite if maximization). That way I "indirectly" omit the TEST_IDX data from sorted-distance-calculation
+      }
+      
+      int start_idx = idx_openmp_flag ? 0 : 1;
+      
+      int end_idx = idx_openmp_flag ? k : (k + 1);
+      
+      knn_indices.set_size(ROWS, k);
+      
+      knn_distances.set_size(ROWS, k);
+      
+      unsigned int i;
+      
+      #ifdef _OPENMP
+      #pragma omp parallel for schedule(static) shared(ROWS, DIST_MAT, idx_openmp_flag, min_sort, test_idx, asc_des, start_idx, end_idx) private(i)
+      #endif
+      for (i = 0; i < ROWS; i++) {
+        
+        arma::field<arma::rowvec> unl_field = inner_dist_field(DIST_MAT, idx_openmp_flag, test_idx, min_sort, i, asc_des);
+        
+        for (int f = start_idx; f < end_idx; f++) {
+          
+          int IDX_subset_iter = unl_field(1,0)(f);
+          
+          int app_idx = idx_openmp_flag ? f : f-1;
+          
+          #ifdef _OPENMP
+          #pragma omp atomic write
+          #endif
+          knn_indices(i,app_idx) = IDX_subset_iter + 1;
+          
+          #ifdef _OPENMP
+          #pragma omp atomic write
+          #endif
+          knn_distances(i,app_idx) = unl_field(0,0)(IDX_subset_iter);
+        }
+      }
+    }
+
     
     // return data for either train or test
     //
@@ -299,14 +439,14 @@ class kernelKnn {
 
 
 
-//------------------------------------------
+//------------------------------------------Rcpp::export
 
 
-// function to be exported
-//
+// kernel-knn (input : raw data)
+//------------------------------
 
 // [[Rcpp::export]]
-Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string method, int threads, double eps = 1.0e-6) {
+Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string& method, int threads, double eps = 1.0e-6) {
   
   kernelKnn kn;
   
@@ -336,5 +476,45 @@ Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, s
   
   return Rcpp::List::create(Rcpp::Named(name_idx) = dat.knn_idx, Rcpp::Named(name_dist) = dat.knn_dist);
 }
+
+
+
+
+// kernel-knn (input : distance matrix)
+//-------------------------------------
+
+// [[Rcpp::export]]
+Rcpp::List DIST_MATRIX_knn(arma::mat& DIST_MAT, Rcpp::Nullable<Rcpp::NumericVector> TEST_IDX = R_NilValue, bool is_min = true, int k = 5, int threads = 1, bool rcpp_list_names = false) {
+  
+  kernelKnn dist_knn;
+  
+  dist_knn.input_dist_mat(DIST_MAT, TEST_IDX, is_min, k, threads);
+  
+  return_data dat = dist_knn.return_train_test();
+  
+  std::string name_idx, name_dist;
+  
+  if (!rcpp_list_names) {                 // used in 'distMat.KernelKnn'
+    
+    name_idx = "knn_idx";
+    name_dist = "knn_dist";}
+  
+  else {
+    
+    if (TEST_IDX.isNull()) {              // used in 'distMat.knn.index.dist'
+      
+      name_idx = "train_knn_idx";
+      name_dist = "train_knn_dist";}
+    
+    else {
+      
+      name_idx = "test_knn_idx";
+      name_dist = "test_knn_dist";
+    }
+  }
+  
+  return Rcpp::List::create(Rcpp::Named(name_idx) = dat.knn_idx, Rcpp::Named(name_dist) = dat.knn_dist);
+}
+
 
 

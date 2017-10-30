@@ -42,4 +42,3 @@ out = knn.index.dist(X, TEST_data = NULL, k = 4, method = 'euclidean', threads =
 \author{
 Lampros Mouselimis
 }
-
