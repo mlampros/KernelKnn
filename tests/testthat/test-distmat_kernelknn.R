@@ -126,7 +126,6 @@ testthat::test_that("it returns an error if missing values are present in the re
 })
 
 
-
 testthat::test_that("it returns an error if the length of y is not equal to the number of rows of the distance matrix", {
   
   testthat::expect_error( distMat.KernelKnn(DIST_mat, TEST_indices = NULL, y[1:100], k = 5, h = 1.0, weights_function = NULL, regression = T, threads = 1, extrema = F, Levels = NULL, minimize = T) )

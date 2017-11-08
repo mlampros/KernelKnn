@@ -3,7 +3,7 @@
 #'
 #' @param DIST_mat a distance matrix (square matrix) having a \emph{diagonal} filled with either zero's (\emph{0}) or NA's (\emph{missing values})
 #' @param TEST_indices a numeric vector specifying the indices of the test data in the distance matrix (row-wise or column-wise). If the parameter equals NULL then no test data is included in the distance matrix
-#' @param y a numeric vector (in classification the labels must be numeric from 1:Inf)
+#' @param y a numeric vector (in classification the labels must be numeric from 1:Inf). It is assumed that if the \emph{TEST_indices} is not NULL then the length of \emph{y} equals to the rows of the train data \emph{( nrow(DIST_mat) - length(TEST_indices) )}, otherwise  \emph{length(y) == nrow(DIST_mat)}.
 #' @param k an integer specifying the k-nearest-neighbors
 #' @param h the bandwidth (applicable if the weights_function is not NULL, defaults to 1.0)
 #' @param weights_function there are various ways of specifying the kernel function. See the details section.
@@ -68,7 +68,11 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
   if (!regression && is.null(Levels)) stop('In classification give the unique values of y in form of a vector')
   if (!regression && any(unique(y) < 1)) stop('the response variable values should begin from 1')
   if (any(is.na(DIST_mat)) || any(is.na(y))) stop('the DIST_mat or the response variable includes missing values')
-  if (length(y) != nrow(DIST_mat)) stop('the size of the DIST_mat and y differ')
+  if (is.null(TEST_indices)) {
+    if (length(y) != nrow(DIST_mat)) {
+      stop('the size of the DIST_mat and y differ')
+    }
+  }
   if (extrema && k < 4) stop('k must be greater than 3 if extrema = TRUE')
   if (!inherits(minimize, "logical")) stop("the 'minimize' parameter should be either TRUE or FALSE")
 

@@ -13,7 +13,7 @@ distMat.KernelKnn(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1,
 
 \item{TEST_indices}{a numeric vector specifying the indices of the test data in the distance matrix (row-wise or column-wise). If the parameter equals NULL then no test data is included in the distance matrix}
 
-\item{y}{a numeric vector (in classification the labels must be numeric from 1:Inf)}
+\item{y}{a numeric vector (in classification the labels must be numeric from 1:Inf). It is assumed that if the \emph{TEST_indices} is not NULL then the length of \emph{y} equals to the rows of the train data \emph{( nrow(DIST_mat) - length(TEST_indices) )}, otherwise  \emph{length(y) == nrow(DIST_mat)}.}
 
 \item{k}{an integer specifying the k-nearest-neighbors}
 

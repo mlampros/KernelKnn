@@ -355,11 +355,13 @@ class kernelKnn {
     // input data is a distance matrix
     //
     
-    void input_dist_mat(arma::mat& DIST_MAT, Rcpp::Nullable<Rcpp::NumericVector> TEST_IDX = R_NilValue, bool is_min = true, int k = 5, int threads = 1) {
+    void input_dist_mat(arma::mat DIST_MAT_input, Rcpp::Nullable<Rcpp::NumericVector> TEST_IDX = R_NilValue, bool is_min = true, int k = 5, int threads = 1) {
       
       #ifdef _OPENMP
       omp_set_num_threads(threads);
       #endif
+      
+      arma::mat& DIST_MAT = DIST_MAT_input;                                    // copy initial data (by reference), because I'll modified it
       
       arma::uvec test_idx;
       
