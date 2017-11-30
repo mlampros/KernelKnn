@@ -1,4 +1,11 @@
 
+
+## KernelKnn 1.0.7
+
+I modified the *input_dist_mat* function of the *distance_metrics.cpp* file due to a bug.
+I modified  the *distMat.KernelKnn* function so that it does not return an error if the rows of the *DIST_mat* distance matrix is not equal to the length of *y* (added comments in the function documentation).
+
+
 ## KernelKnn 1.0.6
 
 In this version the following functions/parameters were added:
