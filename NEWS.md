@@ -1,4 +1,8 @@
 
+## KernelKnn 1.0.8
+
+I added the *DARMA_64BIT_WORD* flag in the Makevars file to allow the package processing big datasets
+
 
 ## KernelKnn 1.0.7
 
