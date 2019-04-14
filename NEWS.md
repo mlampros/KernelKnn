@@ -1,4 +1,9 @@
 
+## KernelKnn 1.0.9
+
+I added a test case to check equality of the results between *KernelKnnCV* and *distMat.KernelKnnCV* functions
+
+
 ## KernelKnn 1.0.8
 
 I added the *DARMA_64BIT_WORD* flag in the Makevars file to allow the package processing big datasets

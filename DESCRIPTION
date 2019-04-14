@@ -1,8 +1,8 @@
 Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
-Version: 1.0.8
-Date: 2018-01-16
+Version: 1.0.9
+Date: 2019-04-14
 Author: Lampros Mouselimis <mouselimislampros@gmail.com>
 Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
 BugReports: https://github.com/mlampros/KernelKnn/issues
@@ -19,4 +19,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

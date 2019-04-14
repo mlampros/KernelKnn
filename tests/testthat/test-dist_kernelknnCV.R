@@ -86,3 +86,27 @@ testthat::test_that("it returns a list of length 2 where the length of the unlis
 })
 
 
+testthat::test_that("both the 'distMat.KernelKnnCV()' and 'KernelKnnCV()' return the same results", {
+  
+  lst_out = list()
+  
+  count = 1
+  for (k_iter in 3:6) {
+    
+    out = KernelKnnCV(X, y, k = k_iter, folds = 5, h = 1, method = "euclidean", weights_function = NULL, regression = TRUE, transf_categ_cols = F,
+                      threads = 1, extrema = F, Levels = NULL, seed_num = 1)
+  
+    out_dist = distMat.KernelKnnCV(DIST_mat, y, k = k_iter, folds = 5, h = 1,
+                                   weights_function = NULL, regression = T, threads = 1, extrema = F,
+                                   Levels = NULL, minimize = T, seed_num = 1)
+    
+    res = all(unlist(lapply(1:length(out$preds), function(x) all(out$preds[[x]] == out_dist$preds[[x]]))))
+    res_dist = all(unlist(lapply(1:length(out$folds), function(x) all(out$folds[[x]] == out_dist$folds[[x]]))))
+    
+    lst_out[[count]] = (res == res_dist)
+    count = count + 1
+  }
+
+  testthat::expect_true( all(unlist(lst_out)) )
+})
+
