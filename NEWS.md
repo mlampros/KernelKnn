@@ -1,4 +1,9 @@
 
+## KernelKnn 1.1.0
+
+* I fixed the *"failure: the condition has length > 1"* CRAN error which appeared mainly due to the misuse of the base *class()* function in multiple code snippets in the package (for more info on this matter see: https://developer.r-project.org/Blog/public/2019/11/09/when-you-think-class.-think-again/index.html)
+
+
 ## KernelKnn 1.0.9
 
 I added a test case to check equality of the results between *KernelKnnCV* and *distMat.KernelKnnCV* functions
