@@ -126,9 +126,9 @@ switch_secondary = function(kernel, W, h, eps = 1.0e-6) {
 
 switch.ops = function (LST, MODE = 'ADD') {
   
-  if (class(LST) != "list")  stop("LST must be a list")
+  if (!inherits(LST, "list"))  stop("LST must be a list")
   
-  if (!all(unlist(lapply(LST, class)) %in% c('data.frame', 'matrix'))) stop('the sublist objects must be either matrices or data frames')
+  if (!all(unlist(lapply(LST, function(x) inherits(x, c('data.frame', 'matrix')))))) stop('the sublist objects must be either matrices or data frames')
   
   r = all(unlist(lapply(LST, nrow)) == unlist(lapply(LST, nrow))[1])
   
