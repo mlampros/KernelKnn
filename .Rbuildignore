@@ -1,5 +1,7 @@
 ^Dockerfile$
 ^Dockerfile_R_devel$
-^.travis.yml$
 ^.git$
 ^.github$
+^\.ccache$
+^\.github$
+^tic\.R$

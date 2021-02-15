@@ -1,11 +1,11 @@
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/KernelKnn)](http://cran.r-project.org/package=KernelKnn)
-[![Travis-CI Build Status](https://travis-ci.org/mlampros/KernelKnn.svg?branch=master)](https://travis-ci.org/mlampros/KernelKnn)
+[![tic](https://github.com/mlampros/KernelKnn/workflows/tic/badge.svg?branch=master)](https://github.com/mlampros/KernelKnn/actions)
 [![codecov.io](https://codecov.io/github/mlampros/KernelKnn/coverage.svg?branch=master)](https://codecov.io/github/mlampros/KernelKnn?branch=master)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/mlampros/KernelKnn?branch=master&svg=true)](https://ci.appveyor.com/project/mlampros/KernelKnn/branch/master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/KernelKnn)](http://cran.r-project.org/package=KernelKnn)
 [![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/KernelKnn?color=blue)](http://www.r-pkg.org/pkg/KernelKnn)
 <a href="https://www.buymeacoffee.com/VY0x8snyh" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="21px" ></a>
 [![](https://img.shields.io/docker/automated/mlampros/kernelknn.svg)](https://hub.docker.com/r/mlampros/kernelknn)
+[![Dependencies](https://tinyverse.netlify.com/badge/KernelKnn)](https://cran.r-project.org/package=KernelKnn)
 
 
 ## KernelKnn
