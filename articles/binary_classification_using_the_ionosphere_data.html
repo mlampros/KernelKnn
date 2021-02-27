@@ -91,7 +91,7 @@
       <h1 data-toc-skip>binary classification using the ionosphere data</h1>
                         <h4 class="author">Lampros Mouselimis</h4>
             
-            <h4 class="date">2021-02-26</h4>
+            <h4 class="date">2021-02-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mlampros/KernelKnn/blob/master/vignettes/binary_classification_using_the_ionosphere_data.Rmd"><code>vignettes/binary_classification_using_the_ionosphere_data.Rmd</code></a></small>
       <div class="hidden name"><code>binary_classification_using_the_ionosphere_data.Rmd</code></div>
@@ -134,10 +134,10 @@
 <span class="va">spl_train</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span>
 <span class="va">spl_test</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="va">spl_train</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">spl_train</span><span class="op">)</span></code></pre></div>
-<pre><code>##  int [1:263] 336 12 7 77 310 204 20 202 205 69 ...</code></pre>
+<pre><code>##  int [1:263] 274 178 69 257 93 219 280 144 306 177 ...</code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">spl_test</span><span class="op">)</span></code></pre></div>
-<pre><code>##  int [1:88] 21 30 31 35 36 43 53 60 61 64 ...</code></pre>
+<pre><code>##  int [1:88] 6 7 9 10 11 15 18 24 25 26 ...</code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># evaluation metric</span>
 
@@ -164,10 +164,10 @@
                        Levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">preds_TEST</span><span class="op">)</span></code></pre></div>
 <pre><code>##      class_1 class_2
-## [1,]     0.0     1.0
-## [2,]     0.8     0.2
+## [1,]     0.8     0.2
+## [2,]     0.0     1.0
 ## [3,]     0.0     1.0
-## [4,]     0.0     1.0
+## [4,]     0.8     0.2
 ## [5,]     0.0     1.0
 ## [6,]     0.0     1.0</code></pre>
 <p><br> There are two ways to use a kernel in the KernelKnn function. The <strong>first option</strong> is to choose one of the existing kernels (<em>uniform</em>, <em>triangular</em>, <em>epanechnikov</em>, <em>biweight</em>, <em>triweight</em>, <em>tricube</em>, <em>gaussian</em>, <em>cosine</em>, <em>logistic</em>, <em>silverman</em>, <em>inverse</em>, <em>gaussianSimple</em>, <em>exponential</em>). Here, I use the <em>canberra</em> metric and the <em>tricube</em> kernel because they give optimal results (according to my RandomSearchR package),</p>
@@ -178,13 +178,13 @@
                             
                             Levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">preds_TEST_tric</span><span class="op">)</span></code></pre></div>
-<pre><code>##             [,1]       [,2]
-## [1,] 0.000000000 1.00000000
-## [2,] 0.983142804 0.01685720
-## [3,] 0.007058576 0.99294142
-## [4,] 0.253648922 0.74635108
-## [5,] 0.931114061 0.06888594
-## [6,] 0.000000000 1.00000000</code></pre>
+<pre><code>##              [,1]      [,2]
+## [1,] 8.458012e-01 0.1541988
+## [2,] 6.281942e-18 1.0000000
+## [3,] 0.000000e+00 1.0000000
+## [4,] 8.724539e-01 0.1275461
+## [5,] 9.560801e-03 0.9904392
+## [6,] 7.340468e-02 0.9265953</code></pre>
 <p><br> The <strong>second option</strong> is to give a self defined kernel function. Here, I’ll pick the density function of the normal distribution with mean = 0.0 and standard deviation = 1.0 (the data are scaled to have mean zero and unit variance),</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norm_kernel</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">W</span><span class="op">)</span> <span class="op">{</span>
@@ -203,13 +203,13 @@
                             
                             Levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">preds_TEST_norm</span><span class="op">)</span></code></pre></div>
-<pre><code>##           [,1]       [,2]
-## [1,] 0.0000000 1.00000000
-## [2,] 0.9122188 0.08778116
-## [3,] 0.1638458 0.83615417
-## [4,] 0.2130637 0.78693630
-## [5,] 0.7422319 0.25776813
-## [6,] 0.0000000 1.00000000</code></pre>
+<pre><code>##            [,1]      [,2]
+## [1,] 0.88415168 0.1158483
+## [2,] 0.07500127 0.9249987
+## [3,] 0.00000000 1.0000000
+## [4,] 0.89057149 0.1094285
+## [5,] 0.08036515 0.9196349
+## [6,] 0.09963571 0.9003643</code></pre>
 <p><br></p>
 <p>The computations can be speed up by using the parameter <strong>threads</strong> (multiple cores can be run in parallel). There is also the option to exclude <strong>extrema</strong> (minimum and maximum distances) during the calculation of the k-nearest-neighbor distances using extrema = TRUE. The <em>bandwidth</em> of the existing kernels can be tuned using the <strong>h</strong> parameter. <br></p>
 <p>K-nearest-neigbor calculations in the KernelKnn function can be accomplished using the following distance metrics : <em>euclidean</em>, <em>manhattan</em>, <em>chebyshev</em>, <em>canberra</em>, <em>braycurtis</em>, <em>minkowski</em> (by default the order ‘p’ of the minkowski parameter equals k), <em>hamming</em>, <em>mahalanobis</em>, <em>pearson_correlation</em>, <em>simple_matching_coefficient</em>, <em>jaccard_coefficient</em> and <em>Rao_coefficient</em>. The last four are similarity measures and are appropriate for binary data [0,1]. <br></p>
