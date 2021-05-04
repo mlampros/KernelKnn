@@ -4,9 +4,19 @@
 \alias{distMat.KernelKnn}
 \title{kernel k-nearest-neighbors using a distance matrix}
 \usage{
-distMat.KernelKnn(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1,
-  weights_function = NULL, regression = F, threads = 1,
-  extrema = F, Levels = NULL, minimize = T)
+distMat.KernelKnn(
+  DIST_mat,
+  TEST_indices = NULL,
+  y,
+  k = 5,
+  h = 1,
+  weights_function = NULL,
+  regression = F,
+  threads = 1,
+  extrema = F,
+  Levels = NULL,
+  minimize = T
+)
 }
 \arguments{
 \item{DIST_mat}{a distance matrix (square matrix) having a \emph{diagonal} filled with either zero's (\emph{0}) or NA's (\emph{missing values})}

@@ -4,8 +4,13 @@
 \alias{distMat.knn.index.dist}
 \title{indices and distances of k-nearest-neighbors using a distance matrix}
 \usage{
-distMat.knn.index.dist(DIST_mat, TEST_indices = NULL, k = 5,
-  threads = 1, minimize = T)
+distMat.knn.index.dist(
+  DIST_mat,
+  TEST_indices = NULL,
+  k = 5,
+  threads = 1,
+  minimize = T
+)
 }
 \arguments{
 \item{DIST_mat}{a distance matrix (square matrix) having a diagonal filled with either zero's (\emph{0}) or NA's (\emph{missing values})}

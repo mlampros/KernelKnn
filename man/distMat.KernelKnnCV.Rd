@@ -4,9 +4,20 @@
 \alias{distMat.KernelKnnCV}
 \title{cross validated kernel-k-nearest-neighbors using a distance matrix}
 \usage{
-distMat.KernelKnnCV(DIST_mat, y, k = 5, folds = 5, h = 1,
-  weights_function = NULL, regression = F, threads = 1,
-  extrema = F, Levels = NULL, minimize = T, seed_num = 1)
+distMat.KernelKnnCV(
+  DIST_mat,
+  y,
+  k = 5,
+  folds = 5,
+  h = 1,
+  weights_function = NULL,
+  regression = F,
+  threads = 1,
+  extrema = F,
+  Levels = NULL,
+  minimize = T,
+  seed_num = 1
+)
 }
 \arguments{
 \item{DIST_mat}{a distance matrix (square matrix) having a diagonal filled with either zero's (\emph{0}) or NA's (\emph{missing values})}

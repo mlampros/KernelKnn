@@ -1,16 +1,16 @@
 Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
-Version: 1.1.0
-Date: 2019-12-04
-Author: Lampros Mouselimis <mouselimislampros@gmail.com>
-Maintainer: Lampros Mouselimis <mouselimislampros@gmail.com>
+Version: 1.1.2
+Date: 2021-05-04
+Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")))
 BugReports: https://github.com/mlampros/KernelKnn/issues
 URL: https://github.com/mlampros/KernelKnn
 Description: Extends the simple k-nearest neighbors algorithm by incorporating numerous kernel functions and a variety of distance metrics. The package takes advantage of 'RcppArmadillo' to speed up the calculation of distances between observations.
 License: MIT + file LICENSE
 SystemRequirements: libarmadillo: apt-get install -y libarmadillo-dev (deb), libblas: apt-get install -y libblas-dev (deb), liblapack: apt-get install -y liblapack-dev (deb), libarpack++2: apt-get install -y libarpack++2-dev (deb), gfortran: apt-get install -y gfortran (deb)
 LazyData: TRUE
+Encoding: UTF-8
 Depends: R(>= 2.10.0)
 Imports: Rcpp (>= 0.12.5)
 LinkingTo: Rcpp, RcppArmadillo
@@ -20,4 +20,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1

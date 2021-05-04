@@ -4,9 +4,21 @@
 \alias{KernelKnnCV}
 \title{kernel-k-nearest-neighbors using cross-validation}
 \usage{
-KernelKnnCV(data, y, k = 5, folds = 5, h = 1, method = "euclidean",
-  weights_function = NULL, regression = F, transf_categ_cols = F,
-  threads = 1, extrema = F, Levels = NULL, seed_num = 1)
+KernelKnnCV(
+  data,
+  y,
+  k = 5,
+  folds = 5,
+  h = 1,
+  method = "euclidean",
+  weights_function = NULL,
+  regression = F,
+  transf_categ_cols = F,
+  threads = 1,
+  extrema = F,
+  Levels = NULL,
+  seed_num = 1
+)
 }
 \arguments{
 \item{data}{a data frame or matrix}

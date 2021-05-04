@@ -4,8 +4,14 @@
 \alias{knn.index.dist}
 \title{indices and distances of k-nearest-neighbors}
 \usage{
-knn.index.dist(data, TEST_data = NULL, k = 5, method = "euclidean",
-  transf_categ_cols = F, threads = 1)
+knn.index.dist(
+  data,
+  TEST_data = NULL,
+  k = 5,
+  method = "euclidean",
+  transf_categ_cols = F,
+  threads = 1
+)
 }
 \arguments{
 \item{data}{a data.frame or matrix}

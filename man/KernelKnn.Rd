@@ -4,9 +4,20 @@
 \alias{KernelKnn}
 \title{kernel k-nearest-neighbors}
 \usage{
-KernelKnn(data, TEST_data = NULL, y, k = 5, h = 1,
-  method = "euclidean", weights_function = NULL, regression = F,
-  transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL)
+KernelKnn(
+  data,
+  TEST_data = NULL,
+  y,
+  k = 5,
+  h = 1,
+  method = "euclidean",
+  weights_function = NULL,
+  regression = F,
+  transf_categ_cols = F,
+  threads = 1,
+  extrema = F,
+  Levels = NULL
+)
 }
 \arguments{
 \item{data}{a data frame or matrix}

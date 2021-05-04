@@ -1,4 +1,14 @@
 
+## KernelKnn 1.1.2
+
+* I've fixed an error in the *CITATION* file
+
+
+## KernelKnn 1.1.1
+
+* I've added the *CITATION* file in the *inst* directory
+
+
 ## KernelKnn 1.1.0
 
 * I fixed the *"failure: the condition has length > 1"* CRAN error which appeared mainly due to the misuse of the base *class()* function in multiple code snippets in the package (for more info on this matter see: https://developer.r-project.org/Blog/public/2019/11/09/when-you-think-class.-think-again/index.html)
