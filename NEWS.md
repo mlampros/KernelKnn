@@ -1,4 +1,9 @@
 
+## KernelKnn 1.1.3
+
+* I updated the References section of the *switch.ops()* function in the *utils.R* file which explain how the combination of the kernels work
+
+
 ## KernelKnn 1.1.2
 
 * I've fixed an error in the *CITATION* file
