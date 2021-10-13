@@ -137,6 +137,8 @@
 <a href="#kernelknn-113" class="anchor"></a>KernelKnn 1.1.3</h2>
 <ul>
 <li>I updated the References section of the <em>switch.ops()</em> function in the <em>utils.R</em> file which explain how the combination of the kernels work</li>
+<li>I added an error case in all functions that make usage of the ‘Levels’ parameter if the ‘Levels’ do not match the unique ‘y’ labels</li>
+<li>I removed the <em>distMat.KernelKnnCV()</em> function (and the <em>tests/test-dist_kernelknnCV.R</em> file) because based on the current implementation of the <em>distMat.KernelKnn()</em> function the <em>TEST_indices</em> parameter <em>must</em> consist of the <em>last indices</em> of the input <em>DIST_mat</em> distance matrix and this is not the case if we run cross-validation (see <a href="https://github.com/mlampros/KernelKnn/issues/5">issue 5</a>)</li>
 </ul>
 </div>
     <div id="kernelknn-112" class="section level2">
