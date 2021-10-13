@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // knn_index_dist_rcpp
 Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string& method, int threads, double eps);
 RcppExport SEXP _KernelKnn_knn_index_dist_rcpp(SEXP MATRIXSEXP, SEXP TEST_DATASEXP, SEXP kSEXP, SEXP methodSEXP, SEXP threadsSEXP, SEXP epsSEXP) {

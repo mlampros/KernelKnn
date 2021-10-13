@@ -2,7 +2,7 @@ Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
 Version: 1.1.3
-Date: 2021-08-18
+Date: 2021-10-13
 Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")))
 BugReports: https://github.com/mlampros/KernelKnn/issues
 URL: https://github.com/mlampros/KernelKnn

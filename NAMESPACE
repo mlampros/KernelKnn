@@ -3,7 +3,6 @@
 export(KernelKnn)
 export(KernelKnnCV)
 export(distMat.KernelKnn)
-export(distMat.KernelKnnCV)
 export(distMat.knn.index.dist)
 export(knn.index.dist)
 importFrom(Rcpp,evalCpp)

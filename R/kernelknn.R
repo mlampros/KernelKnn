@@ -43,7 +43,7 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
     k = round(k)
     warning('k is float and will be rounded to : ', call. = F, expr = k)}
   if (h == 0) stop('h can be any number except for 0')
-  if (!is.character(method) || is.null(method) || !method %in% c('euclidean', 'manhattan', 'chebyshev', 'canberra', 'braycurtis', 'pearson_correlation', 'simple_matching_coefficient', 
+  if (!is.character(method) || is.null(method) || !method %in% c('euclidean', 'manhattan', 'chebyshev', 'canberra', 'braycurtis', 'pearson_correlation', 'simple_matching_coefficient',
                                                                  'minkowski', 'hamming', 'mahalanobis', 'jaccard_coefficient', 'Rao_coefficient'))
     stop("method must be of type character and one of 'euclidean', 'manhattan', 'chebyshev', 'canberra', 'braycurtis', 'pearson_correlation', 'simple_matching_coefficient',
          'minkowski', 'hamming', 'mahalanobis', 'jaccard_coefficient', 'Rao_coefficient'")
@@ -52,6 +52,9 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
   if (!is.numeric(y)) stop('in both regression and classification the response variable should be numeric or integer and in classification it should start from 1')
   if (!regression && is.null(Levels)) stop('In classification give the unique values of y in form of a vector')
   if (!regression && any(unique(y) < 1)) stop('the response variable values should begin from 1')
+  if (!regression) {
+    if (!all(Levels) %in% unique(y)) stop("The specified 'Levels' must match the unique 'y' labels!")
+  }
   if (any(is.na(data)) || any(is.na(y))) stop('the data or the response variable includes missing values')
   if (!is.null(TEST_data) && any(is.na(TEST_data))) stop('the TEST_data includes missing values')
   if (length(y) != nrow(data)) stop('the size of the data and y differ')

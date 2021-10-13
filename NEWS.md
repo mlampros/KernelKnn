@@ -2,6 +2,8 @@
 ## KernelKnn 1.1.3
 
 * I updated the References section of the *switch.ops()* function in the *utils.R* file which explain how the combination of the kernels work
+* I added an error case in all functions that make usage of the 'Levels' parameter if the 'Levels' do not match the unique 'y' labels
+* I removed the *distMat.KernelKnnCV()* function (and the *tests/test-dist_kernelknnCV.R* file) because based on the current implementation of the *distMat.KernelKnn()* function the *TEST_indices* parameter *must* consist of the *last indices* of the input *DIST_mat* distance matrix and this is not the case if we run cross-validation (see [issue 5](https://github.com/mlampros/KernelKnn/issues/5))
 
 
 ## KernelKnn 1.1.2

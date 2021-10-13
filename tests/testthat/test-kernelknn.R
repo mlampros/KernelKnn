@@ -212,9 +212,9 @@ testthat::test_that("it returns error if the weights function is invalid for reg
 
 
 testthat::test_that("it returns a warning if the input matrix seems singular in case of the 'mahalanobis' distance", {
-  
+
   tmp_x = singular_mat[, -ncol(singular_mat)]
-  
+
   tmp_y = as.numeric(singular_mat[, ncol(singular_mat)])
 
   testthat::expect_warning(KernelKnn(tmp_x, TEST_data = NULL, tmp_y, k = 5 , h = 1.0, method = 'mahalanobis', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = unique(tmp_y)))
@@ -382,7 +382,7 @@ testthat::test_that("if the TEST data is NULL for all posible combinations [ WHE
 
           for (extr in c(T,F)) {
 
-            lst = lappend(lst, KernelKnn(xtr_class, TEST_data = NULL, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = w_func, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = unique(y1_class)))
+            lst = lappend(lst, KernelKnn(xtr_class, TEST_data = NULL, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = w_func, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = as.numeric(unique(y1_class))))
 
             count = lappend(count, 1)
           }
@@ -421,7 +421,7 @@ testthat::test_that("if the TEST data is NULL for all posible combinations [ WHE
 
         for (extr in c(T,F)) {
 
-          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = NULL, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = logistic, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = unique(y1_class)))
+          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = NULL, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = logistic, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = as.numeric(unique(y1_class))))
 
           count = lappend(count, 1)
         }
@@ -529,7 +529,7 @@ testthat::test_that("if the TEST data is NOT NULL for all posible combinations [
 
           for (extr in c(T,F)) {
 
-            lst = lappend(lst, KernelKnn(xtr_class, TEST_data = xte_class, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = w_func, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = unique(y1_class)))
+            lst = lappend(lst, KernelKnn(xtr_class, TEST_data = xte_class, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = w_func, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = as.numeric(unique(y1_class))))
 
             count = lappend(count, 1)
           }
@@ -568,7 +568,7 @@ testthat::test_that("if the TEST data is NOT NULL for all posible combinations [
 
         for (extr in c(T,F)) {
 
-          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = xte_class, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = logistic, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = unique(y1_class)))
+          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = xte_class, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = logistic, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = as.numeric(unique(y1_class))))
 
           count = lappend(count, 1)
         }
@@ -627,7 +627,7 @@ testthat::test_that("if the TEST data is NULL for all posible combinations [ WHE
 
         for (extr in c(T,F)) {
 
-          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = NULL, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = unique(y1_class)))
+          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = NULL, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = as.numeric(unique(y1_class))))
 
           count = lappend(count, 1)
         }
@@ -690,7 +690,7 @@ testthat::test_that("if the TEST data is NULL for all posible combinations [ WHE
 
         for (extr in c(T,F)) {
 
-          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = xte_class, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = unique(y1_class)))
+          lst = lappend(lst, KernelKnn(xtr_class, TEST_data = xte_class, as.numeric(y1_class), k = k , h = h, method = metric, weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = extr, Levels = as.numeric(unique(y1_class))))
 
           count = lappend(count, 1)
         }

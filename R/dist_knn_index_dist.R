@@ -15,24 +15,24 @@
 #' @examples
 #'
 #' data(Boston)
-#' 
+#'
 #' X = Boston[, -ncol(Boston)]
-#' 
+#'
 #' dist_obj = dist(X)
-#' 
+#'
 #' dist_mat = as.matrix(dist_obj)
-#' 
+#'
 #' out = distMat.knn.index.dist(dist_mat, TEST_indices = NULL, k = 5)
-#' 
+#'
 
 
 distMat.knn.index.dist = function(DIST_mat, TEST_indices = NULL, k = 5, threads = 1, minimize = T) {
-  
+
   if (!is.matrix(DIST_mat)) stop("the 'DIST_mat' parameter should be of type matrix")
   if (nrow(DIST_mat) != ncol(DIST_mat)) stop("the input 'DIST_mat' should be a square matrix with number of rows equal to number of columns")
   DIAG = diag(DIST_mat)
   nas = all(is.na(DIAG))
-  if (nas) { 
+  if (nas) {
     diag(DIST_mat) = 0 }              # set diagonal to 0.0 if equal to NA
   else {
     if (sum(DIAG) != 0) {
@@ -40,14 +40,11 @@ distMat.knn.index.dist = function(DIST_mat, TEST_indices = NULL, k = 5, threads 
     }
   }
   if (!is.null(TEST_indices)) {
-    if (!inherits(TEST_indices, c("numeric", "integer"))) {
-      stop("the 'TEST_indices' parameter should be a numeric vector")
-    }
-  }
-  if (!is.null(TEST_indices)) {
-    if (max(TEST_indices) > nrow(DIST_mat)) {
-      stop('the maximum number of the TEST_indices is greater than the rows of the input distance matrix')
-    }
+    if (!inherits(TEST_indices, c("numeric", "integer"))) stop("the 'TEST_indices' parameter should be a numeric vector")
+    if (max(TEST_indices) > nrow(DIST_mat)) stop('the maximum number of the TEST_indices is greater than the rows of the input distance matrix')
+    tr_idx = 1:nrow(DIST_mat)
+    tr_idx = tr_idx[-TEST_indices]
+    if (!(min(TEST_indices) > max(tr_idx))) stop("The minimum index of the 'TEST_indices' parameter is greater than the maximum index of the 'DIST_mat' data! Make sure that the 'TEST_indices' consist of the last indices of the 'DIST_mat' parameter!")
   }
   if (!is.numeric(k) || is.null(k) || (k >= nrow(DIST_mat)) || k < 1) stop('k must be of type integer, greater than 0 and less than nrow(DIST_mat)')
   if (abs(k - round(k)) > 0) {
@@ -55,9 +52,9 @@ distMat.knn.index.dist = function(DIST_mat, TEST_indices = NULL, k = 5, threads 
     warning('k is float and will be rounded to : ', call. = F, expr = k)}
   if (any(is.na(DIST_mat))) stop('the DIST_mat includes missing values')
   if (!inherits(minimize, "logical")) stop("the 'minimize' parameter should be either TRUE or FALSE")
-  
+
   res = DIST_MATRIX_knn(DIST_mat, TEST_indices, minimize, k, threads, T)
-  
+
   return(res)
 }
 

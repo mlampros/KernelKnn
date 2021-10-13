@@ -22,25 +22,25 @@
 #' @examples
 #'
 #' data(Boston)
-#' 
+#'
 #' X = Boston[, -ncol(Boston)]
 #' y = Boston[, ncol(Boston)]
-#' 
+#'
 #' dist_obj = dist(X)
-#' 
+#'
 #' dist_mat = as.matrix(dist_obj)
-#' 
+#'
 #' out = distMat.KernelKnn(dist_mat, TEST_indices = NULL, y, k = 5, regression = TRUE)
-#' 
+#'
 
 
 distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, weights_function = NULL, regression = F, threads = 1, extrema = F, Levels = NULL, minimize = T) {
-  
+
   if (!is.matrix(DIST_mat)) stop("the 'DIST_mat' parameter should be of type matrix")
   if (nrow(DIST_mat) != ncol(DIST_mat)) stop("the input 'DIST_mat' should be a square matrix with number of rows equal to number of columns")
   DIAG = diag(DIST_mat)
   nas = all(is.na(DIAG))
-  if (nas) { 
+  if (nas) {
     diag(DIST_mat) = 0 }              # set diagonal to 0.0 if equal to NA
   else {
     if (sum(DIAG) != 0) {
@@ -48,14 +48,11 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
     }
   }
   if (!is.null(TEST_indices)) {
-    if (!inherits(TEST_indices, c("numeric", "integer"))) {
-      stop("the 'TEST_indices' parameter should be a numeric vector")
-    }
-  }
-  if (!is.null(TEST_indices)) {
-    if (max(TEST_indices) > nrow(DIST_mat)) {
-      stop('the maximum number of the TEST_indices is greater than the rows of the input distance matrix')
-    }
+    if (!inherits(TEST_indices, c("numeric", "integer"))) stop("the 'TEST_indices' parameter should be a numeric vector")
+    if (max(TEST_indices) > nrow(DIST_mat)) stop('the maximum number of the TEST_indices is greater than the rows of the input distance matrix')
+    tr_idx = 1:nrow(DIST_mat)
+    tr_idx = tr_idx[-TEST_indices]
+    if (!(min(TEST_indices) > max(tr_idx))) stop("The minimum index of the 'TEST_indices' parameter is greater than the maximum index of the 'DIST_mat' data! Make sure that the 'TEST_indices' consist of the last indices of the 'DIST_mat' parameter!")
   }
   if (!is.numeric(k) || is.null(k) || (k >= nrow(DIST_mat)) || k < 1) stop('k must be of type integer, greater than 0 and less than nrow(DIST_mat)')
   if (abs(k - round(k)) > 0) {
@@ -67,6 +64,9 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
   if (!is.numeric(y)) stop('in both regression and classification the response variable should be numeric or integer and in classification it should start from 1')
   if (!regression && is.null(Levels)) stop('In classification give the unique values of y in form of a vector')
   if (!regression && any(unique(y) < 1)) stop('the response variable values should begin from 1')
+  if (!regression) {
+    if (!all(Levels) %in% unique(y)) stop("The specified 'Levels' must match the unique 'y' labels!")
+  }
   if (any(is.na(DIST_mat)) || any(is.na(y))) stop('the DIST_mat or the response variable includes missing values')
   if (is.null(TEST_indices)) {
     if (length(y) != nrow(DIST_mat)) {
@@ -77,75 +77,75 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
   if (!inherits(minimize, "logical")) stop("the 'minimize' parameter should be either TRUE or FALSE")
 
   if (extrema) {
-    
+
     k = k + 2           # add two values (for min-max)
   }
-  
+
   index_train = DIST_MATRIX_knn(DIST_mat, TEST_indices, minimize, k, threads, F)        # the last parameter is FALSE because it is only applicable to 'distMat.knn.index.dist' [ here I don't need two separate functions for train and test data, as the function returns only predictions and not indices ]
-  
+
   if (extrema) {
-    
+
     index_train$knn_idx = index_train$knn_idx[, -c(1,k)]           # remove min, max  (matrices already sorted)
     index_train$knn_dist = index_train$knn_dist[, -c(1,k)]         # remove min, max  (matrices already sorted)
-    
+
     k = k - 2          # adjust k to previous value
   }
-  
+
   out_train = matrix(y[index_train$knn_idx], ncol = k)
-  
+
   if (!regression) {
-    
+
     if (is.null(weights_function)) {
-      
+
       out = func_tbl_dist(out_train, sort(Levels))
-      
+
       colnames(out) = paste0('class_', sort(Levels))}
-    
+
     else if (is.function(weights_function)) {
-      
+
       W = FUNCTION_weights(index_train$knn_dist, weights_function)
-      
+
       out = func_tbl(out_train, W, sort(Levels))}
-    
+
     else if (is.character(weights_function) && nchar(weights_function) > 1) {
-      
+
       W = FUN_kernels(weights_function, index_train$knn_dist, h)
-      
+
       out = func_tbl(out_train, W, sort(Levels))}
-    
+
     else {
-      
+
       stop('false input for the weights_function argument')
     }
   }
-  
+
   else {
-    
+
     if (is.null(weights_function)) {
-      
+
       out = rowMeans(out_train)
     }
-    
+
     else if (is.function(weights_function)) {
-      
+
       W = FUNCTION_weights(index_train$knn_dist, weights_function)
-      
+
       out = rowSums(out_train * W)
     }
-    
+
     else if (is.character(weights_function) && nchar(weights_function) > 1) {
-      
+
       W = FUN_kernels(weights_function, index_train$knn_dist, h)
-      
+
       out = rowSums(out_train * W)
     }
-    
+
     else {
-      
+
       stop('false input for the weights_function argument')
     }
   }
-  
+
   return(out)
 }
 

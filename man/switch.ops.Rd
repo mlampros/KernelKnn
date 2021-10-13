@@ -9,4 +9,9 @@ switch.ops(LST, MODE = "ADD")
 \description{
 Arithmetic operations on lists
 }
+\references{
+https://www.cs.toronto.edu/~duvenaud/cookbook/
+
+https://raw.githubusercontent.com/duvenaud/phd-thesis/master/kernels.pdf
+}
 \keyword{internal}

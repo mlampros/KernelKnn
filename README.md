@@ -123,7 +123,7 @@ to access the Rstudio console in order to give your username and password.
 
 ### **Citation:**
 
-If you use the **KernelKnn** R package in your paper or research please cite [https://cran.r-project.org/web/packages/KernelKnn/citation.html](https://cran.r-project.org/web/packages/KernelKnn/citation.html):
+If you use the **KernelKnn** R package in your paper or research please cite [https://CRAN.R-project.org/package=KernelKnn/citation.html](https://CRAN.R-project.org/package=KernelKnn/citation.html):
 
 <br>
 
@@ -132,7 +132,7 @@ If you use the **KernelKnn** R package in your paper or research please cite [ht
   title = {{KernelKnn}: Kernel k Nearest Neighbors},
   author = {Lampros Mouselimis},
   year = {2021},
-  note = {R package version 1.1.2},
+  note = {R package version 1.1.3},
   url = {https://CRAN.R-project.org/package=KernelKnn},
 }
 ```
