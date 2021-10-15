@@ -115,25 +115,24 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
       if (is.null(weights_function)) {
 
         out = func_tbl_dist(out_train, sort(Levels))
-
-        colnames(out) = paste0('class_', sort(Levels))}
-
+      }
       else if (is.function(weights_function)) {
 
         W = FUNCTION_weights(index_train$train_knn_dist, weights_function)
 
-        out = func_tbl(out_train, W, sort(Levels))}
-
+        out = func_tbl(out_train, W, sort(Levels))
+      }
       else if (is.character(weights_function) && nchar(weights_function) > 1) {
 
         W = FUN_kernels(weights_function, index_train$train_knn_dist, h)
 
-        out = func_tbl(out_train, W, sort(Levels))}
-
+        out = func_tbl(out_train, W, sort(Levels))
+      }
       else {
-
         stop('false input for the weights_function argument')
       }
+
+      colnames(out) = paste0('class_', sort(Levels))
     }
 
     else {
@@ -142,21 +141,18 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
 
         out = rowMeans(out_train)
       }
-
       else if (is.function(weights_function)) {
 
         W = FUNCTION_weights(index_train$train_knn_dist, weights_function)
 
         out = rowSums(out_train * W)
       }
-
       else if (is.character(weights_function) && nchar(weights_function) > 1) {
 
         W = FUN_kernels(weights_function, index_train$train_knn_dist, h)
 
         out = rowSums(out_train * W)
       }
-
       else {
 
         stop('false input for the weights_function argument')
@@ -193,25 +189,25 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
       if (is.null(weights_function)) {
 
         out_te = func_tbl_dist(out_test, sort(Levels))
-
-        colnames(out_te) = paste0('class_', sort(Levels))}
-
+      }
       else if (is.function(weights_function)) {
 
         W_te = FUNCTION_weights(index$test_knn_dist, weights_function)
 
-        out_te = func_tbl(out_test, W_te, sort(Levels))}
-
+        out_te = func_tbl(out_test, W_te, sort(Levels))
+      }
       else if (is.character(weights_function) && nchar(weights_function) > 1) {
 
         W_te = FUN_kernels(weights_function, index$test_knn_dist, h)
 
-        out_te = func_tbl(out_test, W_te, sort(Levels))}
-
+        out_te = func_tbl(out_test, W_te, sort(Levels))
+      }
       else {
 
         stop('false input for the weights_function argument')
       }
+
+      colnames(out_te) = paste0('class_', sort(Levels))
     }
 
     else {
@@ -220,23 +216,19 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
 
         out_te = rowMeans(out_test)
       }
-
       else if (is.function(weights_function)) {
 
         W_te = FUNCTION_weights(index$test_knn_dist, weights_function)
 
         out_te = rowSums(out_test * W_te)
       }
-
       else if (is.character(weights_function) && nchar(weights_function) > 1) {
 
         W_te = FUN_kernels(weights_function, index$test_knn_dist, h)
 
         out_te = rowSums(out_test * W_te)
       }
-
       else {
-
         stop('false input for the weights_function argument')
       }
     }

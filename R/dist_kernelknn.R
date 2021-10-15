@@ -98,25 +98,25 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
     if (is.null(weights_function)) {
 
       out = func_tbl_dist(out_train, sort(Levels))
-
-      colnames(out) = paste0('class_', sort(Levels))}
-
+    }
     else if (is.function(weights_function)) {
 
       W = FUNCTION_weights(index_train$knn_dist, weights_function)
 
-      out = func_tbl(out_train, W, sort(Levels))}
-
+      out = func_tbl(out_train, W, sort(Levels))
+    }
     else if (is.character(weights_function) && nchar(weights_function) > 1) {
 
       W = FUN_kernels(weights_function, index_train$knn_dist, h)
 
-      out = func_tbl(out_train, W, sort(Levels))}
-
+      out = func_tbl(out_train, W, sort(Levels))
+    }
     else {
 
       stop('false input for the weights_function argument')
     }
+
+    colnames(out) = paste0('class_', sort(Levels))
   }
 
   else {
@@ -125,21 +125,18 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
 
       out = rowMeans(out_train)
     }
-
     else if (is.function(weights_function)) {
 
       W = FUNCTION_weights(index_train$knn_dist, weights_function)
 
       out = rowSums(out_train * W)
     }
-
     else if (is.character(weights_function) && nchar(weights_function) > 1) {
 
       W = FUN_kernels(weights_function, index_train$knn_dist, h)
 
       out = rowSums(out_train * W)
     }
-
     else {
 
       stop('false input for the weights_function argument')

@@ -132,7 +132,7 @@ If you use the **KernelKnn** R package in your paper or research please cite [ht
   title = {{KernelKnn}: Kernel k Nearest Neighbors},
   author = {Lampros Mouselimis},
   year = {2021},
-  note = {R package version 1.1.3},
+  note = {R package version 1.1.4},
   url = {https://CRAN.R-project.org/package=KernelKnn},
 }
 ```

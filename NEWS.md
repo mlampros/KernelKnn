@@ -1,4 +1,9 @@
 
+## KernelKnn 1.1.4
+
+* The pull request 7 fixed a bug in the checking of the Levels argument (see https://github.com/mlampros/KernelKnn/pull/7)
+* I fixed an omission of the column names in case of classification in the *KernelKnn()* and *distMat.KernelKnn()* functions (see https://github.com/mlampros/KernelKnn/issues/8)
+
 ## KernelKnn 1.1.3
 
 * I updated the References section of the *switch.ops()* function in the *utils.R* file which explain how the combination of the kernels work
