@@ -65,7 +65,7 @@ distMat.KernelKnn = function(DIST_mat, TEST_indices = NULL, y, k = 5, h = 1.0, w
   if (!regression && is.null(Levels)) stop('In classification give the unique values of y in form of a vector')
   if (!regression && any(unique(y) < 1)) stop('the response variable values should begin from 1')
   if (!regression) {
-    if (!all(Levels) %in% unique(y)) stop("The specified 'Levels' must match the unique 'y' labels!")
+    if (!all(Levels %in% unique(y))) stop("The specified 'Levels' must match the unique 'y' labels!")
   }
   if (any(is.na(DIST_mat)) || any(is.na(y))) stop('the DIST_mat or the response variable includes missing values')
   if (is.null(TEST_indices)) {
