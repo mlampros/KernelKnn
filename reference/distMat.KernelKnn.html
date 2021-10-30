@@ -213,19 +213,19 @@ There are three possible ways to specify the weights function, 1st option : if t
     <p>Lampros Mouselimis</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Boston</span><span class='op'>)</span>
-
-<span class='va'>X</span> <span class='op'>=</span> <span class='va'>Boston</span><span class='op'>[</span>, <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>Boston</span><span class='op'>)</span><span class='op'>]</span>
-<span class='va'>y</span> <span class='op'>=</span> <span class='va'>Boston</span><span class='op'>[</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>Boston</span><span class='op'>)</span><span class='op'>]</span>
-
-<span class='va'>dist_obj</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
-
-<span class='va'>dist_mat</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>dist_obj</span><span class='op'>)</span>
-
-<span class='va'>out</span> <span class='op'>=</span> <span class='fu'>distMat.KernelKnn</span><span class='op'>(</span><span class='va'>dist_mat</span>, TEST_indices <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>y</span>, k <span class='op'>=</span> <span class='fl'>5</span>, regression <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Boston</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>X</span> <span class='op'>=</span> <span class='va'>Boston</span><span class='op'>[</span>, <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>Boston</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>y</span> <span class='op'>=</span> <span class='va'>Boston</span><span class='op'>[</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>Boston</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>dist_obj</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/dist.html'>dist</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>dist_mat</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>dist_obj</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>out</span> <span class='op'>=</span> <span class='fu'>distMat.KernelKnn</span><span class='op'>(</span><span class='va'>dist_mat</span>, TEST_indices <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>y</span>, k <span class='op'>=</span> <span class='fl'>5</span>, regression <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
