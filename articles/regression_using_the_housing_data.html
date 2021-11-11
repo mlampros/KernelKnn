@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Regression using the Housing data</h1>
                         <h4 class="author">Lampros Mouselimis</h4>
             
-            <h4 class="date">2021-11-10</h4>
+            <h4 class="date">2021-11-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mlampros/KernelKnn/blob/master/vignettes/regression_using_the_housing_data.Rmd"><code>vignettes/regression_using_the_housing_data.Rmd</code></a></small>
       <div class="hidden name"><code>regression_using_the_housing_data.Rmd</code></div>
@@ -131,10 +131,10 @@
 <span class="va">spl_train</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span>
 <span class="va">spl_test</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="va">spl_train</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">spl_train</span><span class="op">)</span></code></pre></div>
-<pre><code>##  int [1:380] 473 159 57 122 299 373 144 133 506 307 ...</code></pre>
+<pre><code>##  int [1:380] 133 417 439 273 122 380 387 336 306 166 ...</code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">spl_test</span><span class="op">)</span></code></pre></div>
-<pre><code>##  int [1:126] 4 5 7 17 21 24 25 27 28 31 ...</code></pre>
+<pre><code>##  int [1:126] 7 8 9 14 15 19 21 27 31 36 ...</code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># evaluation metric</span>
 
@@ -156,7 +156,7 @@
                        
                        method <span class="op">=</span> <span class="st">'euclidean'</span>, weights_function <span class="op">=</span> <span class="cn">NULL</span>, regression <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">preds_TEST</span><span class="op">)</span></code></pre></div>
-<pre><code>##  num [1:126] 28.9 29.8 20 20.6 16.3 ...</code></pre>
+<pre><code>##  num [1:126] 20 17.4 16.8 19.1 17.6 ...</code></pre>
 <p><br> Using transf_categ_cols = TRUE, categorical features can be either encoded to dummy or to numeric features depending on the number of the unique values (here I convert the ‘chas’ and ‘rad’ features to factor to apply the <em>transf_categ_cols</em> parameter)</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">Boston</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -177,7 +177,7 @@
                        
                        regression <span class="op">=</span> <span class="cn">T</span>, transf_categ_cols <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">preds_TEST</span><span class="op">)</span></code></pre></div>
-<pre><code>##  num [1:126] 21.8 20.9 20.1 30 18.1 ...</code></pre>
+<pre><code>##  num [1:126] 22.5 18 17.1 20.9 29.3 ...</code></pre>
 <p><br> There are two ways to use a kernel in the KernelKnn function. The <strong>first option</strong> is to choose one of the existing kernels (<em>uniform</em>, <em>triangular</em>, <em>epanechnikov</em>, <em>biweight</em>, <em>triweight</em>, <em>tricube</em>, <em>gaussian</em>, <em>cosine</em>, <em>logistic</em>, <em>silverman</em>, <em>inverse</em>, <em>gaussianSimple</em>, <em>exponential</em>). Here, I use the <em>mahalanobis</em> metric (which takes advantage of the covariance matrix of the data, but it somewhat slows down training in comparison to the other distance metrics) and the <em>biweight</em> kernel, because they give optimal results (according to my <em>RandomSearchR</em> package),</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">preds_TEST_biw</span> <span class="op">=</span> <span class="fu"><a href="../reference/KernelKnn.html">KernelKnn</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span><span class="va">spl_train</span>, <span class="op">]</span>, TEST_data <span class="op">=</span> <span class="va">X</span><span class="op">[</span><span class="va">spl_test</span>, <span class="op">]</span>, <span class="va">y</span><span class="op">[</span><span class="va">spl_train</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">5</span>, 
@@ -186,7 +186,7 @@
                            
                            regression <span class="op">=</span> <span class="cn">T</span>, transf_categ_cols <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">preds_TEST_biw</span><span class="op">)</span></code></pre></div>
-<pre><code>##  num [1:126] 29.2 31.5 19.8 22.2 14.1 ...</code></pre>
+<pre><code>##  num [1:126] 20 17.4 15.7 19.4 17.2 ...</code></pre>
 <p><br> The <strong>second option</strong> is to give a self defined kernel function. Here, I’ll pick the density function of the normal distribution with mean = 0.0 and standard deviation = 1.0 (the data are scaled to have mean zero and unit variance),</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norm_kernel</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">W</span><span class="op">)</span> <span class="op">{</span>
@@ -205,7 +205,7 @@
                             
                             regression <span class="op">=</span> <span class="cn">T</span>, transf_categ_cols <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">preds_TEST_norm</span><span class="op">)</span></code></pre></div>
-<pre><code>##  num [1:126] 28 29.1 20.2 21.8 15.6 ...</code></pre>
+<pre><code>##  num [1:126] 20.1 17.8 16.5 19.8 17.2 ...</code></pre>
 <p><br></p>
 <p>The computations can be speed up by using the parameter <strong>threads</strong> (multiple cores can be run in parallel). There is also the option to exclude <strong>extrema</strong> (minimum and maximum distances) during the calculation of the k-nearest-neighbor distances using extrema = TRUE. The <em>bandwidth</em> of the existing kernels can be tuned using the <strong>h</strong> parameter. <br></p>
 <p>K-nearest-neigbor calculations in the KernelKnn function can be accomplished using the following distance metrics : <em>euclidean</em>, <em>manhattan</em>, <em>chebyshev</em>, <em>canberra</em>, <em>braycurtis</em>, <em>minkowski</em> (by default the order ‘p’ of the minkowski parameter equals k), <em>hamming</em>, <em>mahalanobis</em>, <em>pearson_correlation</em>, <em>simple_matching_coefficient</em>, <em>jaccard_coefficient</em> and <em>Rao_coefficient</em>. The last four are similarity measures and are appropriate for binary data [0,1]. <br></p>
