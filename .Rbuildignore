@@ -1,7 +1,0 @@
-^Dockerfile$
-^Dockerfile_R_devel$
-^.git$
-^.github$
-^\.ccache$
-^\.github$
-^tic\.R$
