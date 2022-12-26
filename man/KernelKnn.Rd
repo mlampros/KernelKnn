@@ -16,7 +16,8 @@ KernelKnn(
   transf_categ_cols = F,
   threads = 1,
   extrema = F,
-  Levels = NULL
+  Levels = NULL,
+  p = k
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ KernelKnn(
 \item{extrema}{if TRUE then the minimum and maximum values from the k-nearest-neighbors will be removed (can be thought as outlier removal)}
 
 \item{Levels}{a numeric vector. In case of classification the unique levels of the response variable are necessary}
+
+\item{p}{a numeric value specifying the 'minkowski' order, i.e. if 'method' is set to 'minkowski'. This parameter defaults to 'k'}
 }
 \value{
 a vector (if regression is TRUE), or a data frame with class probabilities (if regression is FALSE)

@@ -10,7 +10,8 @@ knn.index.dist(
   k = 5,
   method = "euclidean",
   transf_categ_cols = F,
-  threads = 1
+  threads = 1,
+  p = k
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ knn.index.dist(
 \item{transf_categ_cols}{a boolean (TRUE, FALSE) specifying if the categorical columns should be converted to numeric or to dummy variables}
 
 \item{threads}{the number of cores to be used in parallel (openmp will be employed)}
+
+\item{p}{a numeric value specifying the 'minkowski' order, i.e. if 'method' is set to 'minkowski'. This parameter defaults to 'k'}
 }
 \value{
 a list of length 2. The first sublist returns the indices and the second the distances of the k nearest neighbors for each observation.

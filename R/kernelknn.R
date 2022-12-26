@@ -15,6 +15,7 @@
 #' @param threads the number of cores to be used in parallel (openmp will be employed)
 #' @param extrema if TRUE then the minimum and maximum values from the k-nearest-neighbors will be removed (can be thought as outlier removal)
 #' @param Levels a numeric vector. In case of classification the unique levels of the response variable are necessary
+#' @param p a numeric value specifying the 'minkowski' order, i.e. if 'method' is set to 'minkowski'. This parameter defaults to 'k'
 #' @return a vector (if regression is TRUE), or a data frame with class probabilities (if regression is FALSE)
 #' @author Lampros Mouselimis
 #' @details
@@ -32,8 +33,7 @@
 #'
 
 
-
-KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL) {
+KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL, p = k) {
 
   categorical_data_present = sapply(data, function(x) is.factor(x) || is.character(x))
 
@@ -98,7 +98,7 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
       k = k + 2           # add two values (for min-max)
     }
 
-    index_train = knn_index_dist_rcpp(data, mat, k = k, method = method, threads = threads)
+    index_train = knn_index_dist_rcpp(data, mat, k = k, method = method, threads = threads, p = p)
 
     if (extrema) {
 
@@ -172,7 +172,7 @@ KernelKnn = function(data, TEST_data = NULL, y, k = 5, h = 1.0, method = 'euclid
       k = k + 2           # add two values (for min-max)
     }
 
-    index = knn_index_dist_rcpp(data, TEST_data, k = k, method = method, threads = threads)
+    index = knn_index_dist_rcpp(data, TEST_data, k = k, method = method, threads = threads, p = p)
 
     if (extrema) {
 

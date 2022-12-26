@@ -17,7 +17,8 @@ KernelKnnCV(
   threads = 1,
   extrema = F,
   Levels = NULL,
-  seed_num = 1
+  seed_num = 1,
+  p = k
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ KernelKnnCV(
 \item{Levels}{a numeric vector. In case of classification the unique levels of the response variable are necessary}
 
 \item{seed_num}{a numeric value specifying the seed of the random number generator}
+
+\item{p}{a numeric value specifying the 'minkowski' order, i.e. if 'method' is set to 'minkowski'. This parameter defaults to 'k'}
 }
 \value{
 a list of length 2. The first sublist is a list of predictions (the length of the list equals the number of the folds). The second sublist is a list with the indices for each fold.
@@ -54,7 +57,7 @@ a list of length 2. The first sublist is a list of predictions (the length of th
 This function performs kernel k nearest neighbors regression and classification using cross validation
 }
 \details{
-This function takes a number of arguments (including the number of cross-validation-folds) and it returns predicted values and indices for each fold. 
+This function takes a number of arguments (including the number of cross-validation-folds) and it returns predicted values and indices for each fold.
 There are three possible ways to specify the weights function, 1st option : if the weights_function is NULL then a simple k-nearest-neighbor is performed. 2nd option : the weights_function is one of 'uniform', 'triangular', 'epanechnikov', 'biweight', 'triweight', 'tricube', 'gaussian', 'cosine', 'logistic', 'gaussianSimple', 'silverman', 'inverse', 'exponential'. The 2nd option can be extended by combining kernels from the existing ones (adding or multiplying). For instance, I can multiply the tricube with the gaussian kernel by giving 'tricube_gaussian_MULT' or I can add the previously mentioned kernels by giving 'tricube_gaussian_ADD'. 3rd option : a user defined kernel function
 }
 \examples{

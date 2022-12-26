@@ -1,8 +1,15 @@
 
+## KernelKnn 1.1.5
+
+* I added the order *'p'* of the "minkowski" method as a new parameter to the *'KernelKnn()'*, *'KernelKnnCV()'* and *'knn.index.dist()'* functions. It defaults to 'k' (see https://github.com/mlampros/KernelKnn/issues/9)
+* I added test cases for the *'KernelKnn()'* and *'knn.index.dist()'* functions
+
+
 ## KernelKnn 1.1.4
 
 * The pull request 7 fixed a bug in the checking of the Levels argument (see https://github.com/mlampros/KernelKnn/pull/7)
 * I fixed an omission of the column names in case of classification in the *KernelKnn()* and *distMat.KernelKnn()* functions (see https://github.com/mlampros/KernelKnn/issues/8)
+
 
 ## KernelKnn 1.1.3
 
@@ -80,7 +87,4 @@ Currently, Software platforms like OSX do not support openMP, thus I've made ope
 
 
 ## KernelKnn 1.0.0
-
-
-
 

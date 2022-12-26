@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // knn_index_dist_rcpp
-Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string& method, int threads, double eps);
-RcppExport SEXP _KernelKnn_knn_index_dist_rcpp(SEXP MATRIXSEXP, SEXP TEST_DATASEXP, SEXP kSEXP, SEXP methodSEXP, SEXP threadsSEXP, SEXP epsSEXP) {
+Rcpp::List knn_index_dist_rcpp(arma::mat& MATRIX, arma::mat& TEST_DATA, int k, std::string& method, int threads, double p, double eps);
+RcppExport SEXP _KernelKnn_knn_index_dist_rcpp(SEXP MATRIXSEXP, SEXP TEST_DATASEXP, SEXP kSEXP, SEXP methodSEXP, SEXP threadsSEXP, SEXP pSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,8 +22,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< std::string& >::type method(methodSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
-    rcpp_result_gen = Rcpp::wrap(knn_index_dist_rcpp(MATRIX, TEST_DATA, k, method, threads, eps));
+    rcpp_result_gen = Rcpp::wrap(knn_index_dist_rcpp(MATRIX, TEST_DATA, k, method, threads, p, eps));
     return rcpp_result_gen;
 END_RCPP
 }

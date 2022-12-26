@@ -16,10 +16,11 @@
 #' @param extrema if TRUE then the minimum and maximum values from the k-nearest-neighbors will be removed (can be thought as outlier removal)
 #' @param Levels a numeric vector. In case of classification the unique levels of the response variable are necessary
 #' @param seed_num a numeric value specifying the seed of the random number generator
+#' @param p a numeric value specifying the 'minkowski' order, i.e. if 'method' is set to 'minkowski'. This parameter defaults to 'k'
 #' @return a list of length 2. The first sublist is a list of predictions (the length of the list equals the number of the folds). The second sublist is a list with the indices for each fold.
 #' @author Lampros Mouselimis
 #' @details
-#' This function takes a number of arguments (including the number of cross-validation-folds) and it returns predicted values and indices for each fold. 
+#' This function takes a number of arguments (including the number of cross-validation-folds) and it returns predicted values and indices for each fold.
 #' There are three possible ways to specify the weights function, 1st option : if the weights_function is NULL then a simple k-nearest-neighbor is performed. 2nd option : the weights_function is one of 'uniform', 'triangular', 'epanechnikov', 'biweight', 'triweight', 'tricube', 'gaussian', 'cosine', 'logistic', 'gaussianSimple', 'silverman', 'inverse', 'exponential'. The 2nd option can be extended by combining kernels from the existing ones (adding or multiplying). For instance, I can multiply the tricube with the gaussian kernel by giving 'tricube_gaussian_MULT' or I can add the previously mentioned kernels by giving 'tricube_gaussian_ADD'. 3rd option : a user defined kernel function
 #' @export
 #' @importFrom utils txtProgressBar
@@ -28,7 +29,7 @@
 #'
 #' \dontrun{
 #' data(ionosphere)
-#' 
+#'
 #' X = ionosphere[, -c(2, ncol(ionosphere))]
 #' y = as.numeric(ionosphere[, ncol(ionosphere)])
 #'
@@ -36,8 +37,8 @@
 #' }
 
 
-KernelKnnCV = function(data, y, k = 5, folds = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL, seed_num = 1) {
-  
+KernelKnnCV = function(data, y, k = 5, folds = 5, h = 1.0, method = 'euclidean', weights_function = NULL, regression = F, transf_categ_cols = F, threads = 1, extrema = F, Levels = NULL, seed_num = 1, p = k) {
+
   if (length(y) != nrow(data)) stop('the size of the data and y differ')
   if (!is.logical(regression)) stop('the regression argument should be either TRUE or FALSE')
   if (any(is.na(data)) || any(is.na(y))) stop('the data or the response variable includes missing values')
@@ -46,45 +47,55 @@ KernelKnnCV = function(data, y, k = 5, folds = 5, h = 1.0, method = 'euclidean',
   if (!is.numeric(y)) stop('in both regression and classification the response variable should be numeric or integer and in classification it should start from 1')
   if (!regression && any(unique(y) < 1)) stop('the response variable values should begin from 1')
   if (folds < 2) stop('the number of folds should be at least 2')
-  
+
   start = Sys.time()
-  
+
   if (regression) {
-    
+
     set.seed(seed_num)
     n_folds = regr_folds(folds, y)}
-  
+
   else {
-    
+
     set.seed(seed_num)
     n_folds = class_folds(folds, as.factor(y))
   }
-  
+
   if (!all(unlist(lapply(n_folds, length)) > 5)) stop('Each fold has less than 5 observations. Consider decreasing the number of folds or increasing the size of the data.')
-  
+
   tmp_fit = list()
-  
+
   cat('\n') ; cat('cross-validation starts ..', '\n')
-  
+
   pb <- txtProgressBar(min = 0, max = folds, style = 3); cat('\n')
-  
+
   for (i in 1:folds) {
-    
-    tmp_fit[[i]] = KernelKnn(data[unlist(n_folds[-i]), ], TEST_data = data[unlist(n_folds[i]), ], y[unlist(n_folds[-i])], k = k, h = h, method = method, 
-                        
-                        weights_function = weights_function, regression = regression, transf_categ_cols = transf_categ_cols, threads = threads, extrema = extrema, Levels = Levels)
-    
+
+    tmp_fit[[i]] = KernelKnn(data = data[unlist(n_folds[-i]), ],
+                             TEST_data = data[unlist(n_folds[i]), ],
+                             y = y[unlist(n_folds[-i])],
+                             k = k,
+                             h = h,
+                             method = method,
+                             weights_function = weights_function,
+                             regression = regression,
+                             transf_categ_cols = transf_categ_cols,
+                             threads = threads,
+                             extrema = extrema,
+                             Levels = Levels,
+                             p = p)
+
     setTxtProgressBar(pb, i)
   }
-  
+
   close(pb); cat('\n')
-  
+
   end = Sys.time()
-  
+
   t = end - start
-  
+
   cat('time to complete :', t, attributes(t)$units, '\n'); cat('\n');
-  
+
   return(list(preds = tmp_fit, folds = n_folds))
 }
 

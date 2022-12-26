@@ -1,8 +1,8 @@
 Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
-Version: 1.1.4
-Date: 2021-10-29
+Version: 1.1.5
+Date: 2022-12-26
 Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")), person(given = "Matthew", family = "Parks", email = "parksmatthewm@gmail.com", role = "ctb", comment = c(Github = "Github Contributor")) )
 BugReports: https://github.com/mlampros/KernelKnn/issues
 URL: https://github.com/mlampros/KernelKnn
@@ -20,4 +20,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

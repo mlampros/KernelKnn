@@ -9,11 +9,11 @@
 
 /* .Call calls */
 extern SEXP _KernelKnn_DIST_MATRIX_knn(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP _KernelKnn_knn_index_dist_rcpp(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP _KernelKnn_knn_index_dist_rcpp(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_KernelKnn_DIST_MATRIX_knn",     (DL_FUNC) &_KernelKnn_DIST_MATRIX_knn,     6},
-    {"_KernelKnn_knn_index_dist_rcpp", (DL_FUNC) &_KernelKnn_knn_index_dist_rcpp, 6},
+    {"_KernelKnn_knn_index_dist_rcpp", (DL_FUNC) &_KernelKnn_knn_index_dist_rcpp, 7},
     {NULL, NULL, 0}
 };
 

@@ -741,4 +741,19 @@ testthat::test_that("the similarity measures 'simple_matching_coefficient', 'jac
 })
 
 
+
+testthat::test_that("the 'p' parameter when method is 'minkowski' returns the expected output", {
+
+  k = 2
+  res_wo = KernelKnn(data = X, y = y, k = k , h = 1.0, method = 'minkowski', regression = T, threads = 1)            # without specifying the 'p' parameter
+  res_w = KernelKnn(data = X, y = y, k = k , h = 1.0, method = 'minkowski', regression = T, threads = 1, p = k)      # by specifying the 'p' parameter
+  res_dif = KernelKnn(data = X, y = y, k = k , h = 1.0, method = 'minkowski', regression = T, threads = 1, p = 1)    # 'p' is set to 1
+
+  is_identical = identical(res_wo, res_w)
+  is_not_identical = identical(res_wo, res_dif)
+
+  testthat::expect_true(is_identical & (!is_not_identical))
+})
+
+
 #==============================================================================================================================================================
