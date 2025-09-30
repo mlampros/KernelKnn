@@ -1,9 +1,11 @@
-pandoc: 2.7.3
-pkgdown: 1.6.1
+pandoc: 3.1.11
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   binary_classification_using_the_ionosphere_data: binary_classification_using_the_ionosphere_data.html
   image_classification_using_MNIST_CIFAR_data: image_classification_using_MNIST_CIFAR_data.html
   regression_using_the_housing_data: regression_using_the_housing_data.html
-last_built: 2021-11-30T04:47Z
-
+last_built: 2025-09-30T17:31Z
+urls:
+  reference: https://mlampros.github.io/KernelKnn/reference
+  article: https://mlampros.github.io/KernelKnn/articles
