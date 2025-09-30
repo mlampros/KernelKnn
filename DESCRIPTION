@@ -1,14 +1,13 @@
 Package: KernelKnn
 Type: Package
 Title: Kernel k Nearest Neighbors
-Version: 1.1.5
-Date: 2023-01-06
-Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "https://orcid.org/0000-0002-8024-1546")), person(given = "Matthew", family = "Parks", email = "parksmatthewm@gmail.com", role = "ctb", comment = c(Github = "Github Contributor")) )
+Version: 1.1.6
+Date: 2025-09-14
+Authors@R: c( person(given = "Lampros", family = "Mouselimis", email = "mouselimislampros@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-8024-1546")), person(given = "Matthew", family = "Parks", email = "parksmatthewm@gmail.com", role = "ctb", comment = "Github Contributor") )
 BugReports: https://github.com/mlampros/KernelKnn/issues
-URL: https://github.com/mlampros/KernelKnn
+URL: https://github.com/mlampros/KernelKnn, https://mlampros.github.io/KernelKnn/
 Description: Extends the simple k-nearest neighbors algorithm by incorporating numerous kernel functions and a variety of distance metrics. The package takes advantage of 'RcppArmadillo' to speed up the calculation of distances between observations.
 License: MIT + file LICENSE
-SystemRequirements: libarmadillo: apt-get install -y libarmadillo-dev (deb), libblas: apt-get install -y libblas-dev (deb), liblapack: apt-get install -y liblapack-dev (deb), libarpack++2: apt-get install -y libarpack++2-dev (deb), gfortran: apt-get install -y gfortran (deb)
 LazyData: TRUE
 Encoding: UTF-8
 Depends: R(>= 2.10.0)
@@ -20,4 +19,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2

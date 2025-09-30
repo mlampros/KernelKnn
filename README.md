@@ -1,11 +1,9 @@
 
-[![tic](https://github.com/mlampros/KernelKnn/workflows/tic/badge.svg?branch=master)](https://github.com/mlampros/KernelKnn/actions)
-[![codecov.io](https://codecov.io/github/mlampros/KernelKnn/coverage.svg?branch=master)](https://codecov.io/github/mlampros/KernelKnn?branch=master)
+[![R-CMD-check](https://github.com/mlampros/KernelKnn/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mlampros/KernelKnn/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/KernelKnn)](http://cran.r-project.org/package=KernelKnn)
 [![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/KernelKnn?color=blue)](http://www.r-pkg.org/pkg/KernelKnn)
-<a href="https://www.buymeacoffee.com/VY0x8snyh" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="21px" ></a>
 [![](https://img.shields.io/docker/automated/mlampros/kernelknn.svg)](https://hub.docker.com/r/mlampros/kernelknn)
-[![Dependencies](https://tinyverse.netlify.com/badge/KernelKnn)](https://cran.r-project.org/package=KernelKnn)
+[![status](https://tinyverse.netlify.app/badge/KernelKnn)](https://CRAN.R-project.org/package=KernelKnn)
 
 
 ## KernelKnn
@@ -24,13 +22,13 @@ install.packages("KernelKnn")
 ```
 <br>
 
-and to download the latest version from Github use the *install_github* function of the devtools package,
-<br><br>
+or download the latest version from Github using the *pak* package,
+
+<br>
 
 ```R
 
-devtools::install_github('mlampros/KernelKnn')
-
+pak::pak('mlampros/KernelKnn')
 
 ```
 <br>
@@ -131,8 +129,8 @@ If you use the **KernelKnn** R package in your paper or research please cite [ht
 @Manual{,
   title = {{KernelKnn}: Kernel k Nearest Neighbors},
   author = {Lampros Mouselimis},
-  year = {2021},
-  note = {R package version 1.1.5},
+  year = {2025},
+  note = {R package version 1.1.6},
   url = {https://CRAN.R-project.org/package=KernelKnn},
 }
 ```

@@ -1,4 +1,16 @@
 
+## KernelKnn 1.1.7
+
+* I removed the `SystemRequirements` from the DESCRIPTION file.
+
+
+## KernelKnn 1.1.6
+
+* I updated the `Makevars` and `Makevars.win` files by adding `-DARMA_USE_CURRENT` (see issue: https://github.com/RcppCore/RcppArmadillo/issues/476)
+* I removed the `-mthreads` compilation option from the "Makevars.win" file
+* I removed the "CXX_STD = CXX11" from the "Makevars" files, and the "[[Rcpp::plugins(cpp11)]]" from the "distance_metrics.cpp" file due to the following NOTE from CRAN, "NOTE Specified C++11: please drop specification unless essential" (see also: https://www.tidyverse.org/blog/2023/03/cran-checks-compiled-code/#note-regarding-systemrequirements-c11)
+
+
 ## KernelKnn 1.1.5
 
 * I added the order *'p'* of the "minkowski" method as a new parameter to the *'KernelKnn()'*, *'KernelKnnCV()'* and *'knn.index.dist()'* functions. It defaults to 'k' (see https://github.com/mlampros/KernelKnn/issues/9)

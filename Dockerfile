@@ -1,9 +1,8 @@
 FROM rocker/rstudio:devel
-
 LABEL maintainer='Lampros Mouselimis'
 
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update && \
- apt-get install -y git-core pandoc pandoc-citeproc libssl-dev libcurl4-openssl-dev && \
+ apt-get install -y git-core pandoc libssl-dev libcurl4-openssl-dev && \
  apt-get install -y sudo && \
  apt-get install -y libarmadillo-dev && \
  apt-get install -y libblas-dev && \
@@ -14,14 +13,15 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update && \
  apt-get install -y libssh2-1-dev && \
  apt-get install -y zlib1g-dev && \
  R -e "install.packages('devtools', dependencies = TRUE, repos = 'https://cloud.r-project.org/')" && \
- R -e "install.packages(c( 'Rcpp', 'RcppArmadillo', 'testthat', 'covr', 'knitr', 'rmarkdown', 'remotes' ), repos =  'https://cloud.r-project.org/' )"
+ R -e "install.packages(c( 'Rcpp', 'RcppArmadillo', 'testthat', 'covr', 'knitr', 'rmarkdown', 'remotes' ), repos =  'https://cloud.r-project.org/' )" && \
+ apt-get autoremove -y && \
+ apt-get clean && \
+ rm -rf /var/lib/apt/lists/*
 
 ADD http://www.random.org/strings/?num=10&len=8&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new uuid
 ARG BUILD_DATE
 
 RUN echo "$BUILD_DATE"
-RUN R -e "remotes::install_github('mlampros/KernelKnn', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')" && \
- apt-get autoremove -y && \
- apt-get clean
+RUN R -e "remotes::install_github('mlampros/KernelKnn', upgrade = 'always', dependencies = TRUE, repos = 'https://cloud.r-project.org/')"
 
-ENV USER rstudio
+ENV USER=rstudio

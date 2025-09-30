@@ -9,4 +9,4 @@ Please include a minimal reproducible example
 
 Please give a brief description of the problem
 
-Please add your Operating System (e.g., Windows10, Macintosh, Linux) and the R version that you use (e.g., 3.6.2)
+Please add your Operating System (e.g., Windows10, Macintosh, Linux) and the R version that you use (e.g., 4.0.2)
